@@ -17,6 +17,7 @@ public class Application {
     private final static Storage storage = new Storage(); // Создаем экземпляр Storage для хранения товаров
     public final static OrderList orderList = new OrderList(); // Создаем экземпляр OrderList для хранения заказов
 
+    
     public static Storage getStorage() {
         return storage;
     }
