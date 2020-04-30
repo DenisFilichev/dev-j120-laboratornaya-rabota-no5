@@ -6,13 +6,16 @@
 package ru.avalon.java.dev.j12.labs.orders;
 
 import java.util.ArrayList;
+import ru.avalon.java.dev.j12.labs.Product;
+import ru.avalon.java.dev.j12.labs.ProductOrderList;
 
 /**
  *
  * @author denis
  */
-public class OrderList{
-    ArrayList <Order> orderList = new ArrayList<>();
+public class OrderList implements ProductOrderList{
+    final ArrayList <Order> orderList = new ArrayList<>();
+    final ArrayList<Product> storage = new ArrayList<>();
     
     public void addOrder (Order order){
         orderList.add(order);
@@ -34,14 +37,9 @@ public class OrderList{
     }
     
     //Метод для поиска заказа по его ID
-    public Order findOrder (Integer id){
-        try{
+    public Order findOrder (int id){
         for (Object obj : orderList){
             if (((Order)obj).getIdOrder()==id) return (Order)obj;
-        }
-        throw new NullPointerException();
-        }catch (NullPointerException e){
-            System.out.println("Введен не существующий номер заказа");
         }
         return null;
     }
@@ -50,6 +48,4 @@ public class OrderList{
     public String toString() {
         return "OrderList{" + "orderList=" + orderList + '}';
     }
-    
-    
 }

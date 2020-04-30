@@ -9,19 +9,19 @@ package ru.avalon.java.dev.j12.labs;
  *
  * @author denis
  */
-public class Product {
-    private final Integer article;
+public class Product implements ProductOrderList {
+    private final int id;
     private String name;
     private String color;
-    private Integer price;
-    private Integer balance;
+    private int price;
+    private int balance;
 
     public Product (Product other){
-        this(other.article, other.name, other.color, other.price, other.balance);
+        this(other.id, other.name, other.color, other.price, other.balance);
     }
     
-    public Product(Integer article, String name, String color, Integer price, Integer balance) {
-        this.article = article;
+    public Product(int article, String name, String color, int price, int balance) {
+        this.id = article;
         this.name = name;
         this.color = color;
         this.price = price;
@@ -30,17 +30,17 @@ public class Product {
 
     public void setName(String name) {this.name = name;}
     public void setColor(String color) {this.color = color;}
-    public void setPrice(Integer price) {this.price = price;}
+    public void setPrice(int price) {this.price = price;}
     public void setBalance(Integer balance) {this.balance = balance;}
 
-    public Integer getArticle() {return article;}
+    public int getId() {return id;}
     public String getName() {return name;}
     public String getColor() {return color;}
-    public Integer getPrice() {return price;}
-    public Integer getBalance() {return balance;}
+    public int getPrice() {return price;}
+    public int getBalance() {return balance;}
 
     @Override
     public String toString() {
-        return "Product{" + "article=" + article + ", name=" + name + ", color=" + color + ", price=" + price + ", balance=" + balance + '}';
-    }  
+        return "Product{" + "id= " + id + ", name= " + name + ", color= " + color + ", price= " + price + ", balance= " + balance + '}';
+    }
 }

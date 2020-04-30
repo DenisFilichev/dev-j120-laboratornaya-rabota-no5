@@ -12,7 +12,7 @@ import java.util.TreeSet;
  *
  * @author denis
  */
-public class Storage {
+public class Storage implements ProductOrderList{
     TreeSet<Product> storage = new TreeSet<>(new MyComp());
     public void addProduct(Product product) {
         storage.add(product);
@@ -30,7 +30,7 @@ public class Storage {
         if(storage.isEmpty()) return 1;
         Integer num=1;
         for (Object obj : storage){
-            if (((Product)obj).getArticle()>num) num = ((Product)obj).getArticle();
+            if (((Product)obj).getId()>num) num = ((Product)obj).getId();
         }
         return num+1;
     }
@@ -41,15 +41,15 @@ public class Storage {
     }
 }
 
-class MyComp implements Comparator<Product>{
+class MyComp implements Comparator<Product>, ProductOrderList{
 
     @Override
     public int compare(Product product1, Product product2) {
         //Сортировка по наименованию, цвету и цене
-        /*String str1 = product1.getName()+product1.getColor()+product1.getPrice();
+        String str1 = product1.getName()+product1.getColor()+product1.getPrice();
         String str2 = product2.getName()+product2.getColor()+product2.getPrice();
-        return str1.compareTo(str2);*/
+        return str1.compareTo(str2);
         //Сортировка по артикулу
-        return product1.getArticle().compareTo(product2.getArticle());
+        //return product1.getId().compareTo(product2.getId());
     }
 }
