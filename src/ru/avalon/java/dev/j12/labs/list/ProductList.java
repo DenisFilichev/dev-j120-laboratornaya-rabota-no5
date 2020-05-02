@@ -3,45 +3,49 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.dev.j12.labs;
+package ru.avalon.java.dev.j12.labs.list;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import ru.avalon.java.dev.j12.labs.models.Product;
 import java.util.Comparator;
-import java.util.TreeSet;
 
 /**
  *
  * @author denis
  */
-public class Storage implements ProductOrderList{
-    TreeSet<Product> storage = new TreeSet<>(new MyComp());
+public class ProductList implements Serializable{
+    ArrayList<Product> list = new ArrayList<>();
+    
     public void addProduct(Product product) {
-        storage.add(product);
-        //Collections.sort(storage, new MyComp());
+        list.add(product);
+        Collections.sort(list, new MyComp());
     }
     
-    public TreeSet getStorage() {
-        return storage;
+    public ArrayList getList() {
+        return list;
     }
     
 
     //Метод для получения уникального артикула
-    public Integer getUniqueNumber(){
-        if (storage == null) return 0;
-        if(storage.isEmpty()) return 1;
+    public Integer getUniqueID(){
+        if (list == null) return 0;
+        if(list.isEmpty()) return 1;
         Integer num=1;
-        for (Object obj : storage){
-            if (((Product)obj).getId()>num) num = ((Product)obj).getId();
+        for (Object obj : list){
+            if (((Product)obj).getID()>num) num = ((Product)obj).getID();
         }
         return num+1;
     }
     
         @Override
     public String toString() {
-        return "Storage{" + "storage=" + storage + '}';
+        return "Storage{" + "storage=" + list + '}';
     }
 }
 
-class MyComp implements Comparator<Product>, ProductOrderList{
+class MyComp implements Comparator<Product>, Serializable{
 
     @Override
     public int compare(Product product1, Product product2) {

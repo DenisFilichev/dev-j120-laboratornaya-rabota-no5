@@ -3,35 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.dev.j12.labs.orders;
+package ru.avalon.java.dev.j12.labs.list;
 
+import java.io.Serializable;
+import ru.avalon.java.dev.j12.labs.models.Order;
 import java.util.ArrayList;
-import ru.avalon.java.dev.j12.labs.Product;
-import ru.avalon.java.dev.j12.labs.ProductOrderList;
 
 /**
  *
  * @author denis
  */
-public class OrderList implements ProductOrderList{
+public class OrderList implements Serializable{
     final ArrayList <Order> orderList = new ArrayList<>();
-    final ArrayList<Product> storage = new ArrayList<>();
     
     public void addOrder (Order order){
         orderList.add(order);
     }
 
-    public ArrayList<Order> getOrderList() {
+    public ArrayList<Order> getList() {
         return orderList;
     }
     
     //Метод для получения уникального ID заказа
-    public Integer getUniqueNumber(){
+    public Integer getUniqueID(){
         if (orderList==null) return 0;
         if (orderList.isEmpty()) return 1;
         Integer i = 1;
         for (Object obj : orderList){
-            if (((Order)obj).getIdOrder()>=i) i=((Order)obj).getIdOrder();
+            if (((Order)obj).getID()>=i) i=((Order)obj).getID();
         }
         return i+1;
     }
@@ -39,7 +38,7 @@ public class OrderList implements ProductOrderList{
     //Метод для поиска заказа по его ID
     public Order findOrder (int id){
         for (Object obj : orderList){
-            if (((Order)obj).getIdOrder()==id) return (Order)obj;
+            if (((Order)obj).getID()==id) return (Order)obj;
         }
         return null;
     }

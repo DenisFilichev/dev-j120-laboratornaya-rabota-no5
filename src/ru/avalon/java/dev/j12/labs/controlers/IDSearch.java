@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.dev.j12.labs;
-
-import java.io.Serializable;
+package ru.avalon.java.dev.j12.labs.controlers;
 
 /**
  *
  * @author denis
  */
-public interface ProductOrderList extends Serializable{
+public interface IDSearch {
+    
+    public int getID ();
     
 }

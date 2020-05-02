@@ -1,10 +1,13 @@
 package ru.avalon.java.dev.j12.labs;
 
+import ru.avalon.java.dev.j12.labs.list.ProductList;
+import ru.avalon.java.dev.j12.labs.list.OrderList;
+import ru.avalon.java.dev.j12.labs.models.Order;
+import ru.avalon.java.dev.j12.labs.models.Product;
 import java.io.IOException;
 import java.util.Iterator;
-import ru.avalon.java.dev.j12.labs.controlers.FileListReader;
-import ru.avalon.java.dev.j12.labs.controlers.FileListWriter;
-import ru.avalon.java.dev.j12.labs.orders.*;
+import ru.avalon.java.dev.j12.labs.controlers.FileListProducts;
+import ru.avalon.java.dev.j12.labs.controlers.FileListOrders;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,75 +20,83 @@ import ru.avalon.java.dev.j12.labs.orders.*;
  * @author denis
  */
 public class Application {
-    private static Storage storageObject;// = new Storage(); // Создаем переменную Storage для хранения товаров
-    public static OrderList orderListObject;// = new OrderList(); // Создаем переменную OrderList для хранения заказов
-    //новые объекты созданы для избежания появления ошибки NullPointerException
-
+    private static ProductList ProductListObject;// = new ProductList(); // Создаем объект для хранения товаров
+    public static OrderList orderListObject;// = new OrderList(); // Создаем объект для хранения заказов
     
-    public static Storage getStorage() {
-        return storageObject;
+    public static ProductList getProductList() {
+        return ProductListObject;
     }
 
     public static void main(String[] args) {
         
-        //Создаем объекты из файлов
-        FileListReader flr = new FileListReader();
+        // Считываем список продуктов из файла
         try{
-            flr.fileListReader();
-        }catch (IOException | ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        if (flr.getStorage()!=null && flr.getOrderList()!=null) {
-            storageObject = flr.getStorage();
-            orderListObject = flr.getOrderList();
-        } else System.out.println("Списки товаров и заказов пусты");
+            if (FileListProducts.fileRead()!=null){
+                ProductListObject = FileListProducts.fileRead();
+            } else System.out.println("Не удалось считать список товаров");
+        }catch (IOException | ClassNotFoundException e){e.printStackTrace();}
+        
+        // Считываем список заказов из файла
+        try{
+            if (FileListOrders.fileRead()!=null){
+                orderListObject = FileListOrders.fileRead();
+            } else System.out.println("Не удалось считать список заказов");
+        }catch (IOException | ClassNotFoundException e){e.printStackTrace();}
+        
+        if (ProductListObject==null){ProductListObject=new ProductList();}
+        if (orderListObject==null){orderListObject=new OrderList();}
         
         //Создаем единицы товаров и помещаем их на склад
-        /*storageObject = new Storage(); // Создаем экземпляр Storage для хранения товаров
-        orderListObject = new OrderList(); // Создаем экземпляр OrderList для хранения заказов
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "banana", "yellow", 56, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "apple", "green", 48, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "grape", "red", 67, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "orange", "orange", 65, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "pear", "green", 78, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "strawberries", "red", 63, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "lemon", "yellow", 44, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "avocado", "green", 98, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "plum", "blue", 49, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "plumBlack", "black", 49, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "apple", "red", 45, 100));
-        storageObject.addProduct(new Product(storageObject.getUniqueNumber(), "banana", "yellow", 50, 100));*/
+        /*if (ProductListObject!=null){ //Проверка на NullPointerException
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "banana", "yellow", 56, 10));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "apple", "green", 48, 10));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "grape", "red", 67, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "orange", "orange", 65, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "pear", "green", 78, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "strawberries", "red", 63, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "lemon", "yellow", 44, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "avocado", "green", 98, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "plum", "blue", 49, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "plumBlack", "black", 49, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "apple", "red", 45, 100));
+            ProductListObject.addProduct(new Product(ProductListObject.getUniqueID(), "banana", "yellow", 50, 100));
+        } else System.out.println("ProductListObject == null");*/
     
         System.out.println("--------Список товараров на складе--------");
-            Iterator <Product> itrP = storageObject.getStorage().iterator();
-            while(itrP.hasNext())System.out.println(itrP.next());
+            for (Object obj : ProductListObject.getList()){
+            System.out.println(obj);
+        }
         
-        /*System.out.println("--------Заказы--------");
+
         //Создаем новый заказ
-        orderListObject.addOrder(new Order(orderListObject.getUniqueNumber(), "Anna", "+79218594578", "Просвещения 49", 10));
-        // Добавляем к заказу товары
-        if (orderListObject.findOrder(1)!=null) orderListObject.findOrder(1).addProductToList(2, storageObject, 5);
-        else System.out.println("Введен не верный номер заказа");
-        if (orderListObject.findOrder(1)!=null) orderListObject.findOrder(1).addProductToList(5, storageObject, 10);
-        else System.out.println("Введен не верный номер заказа");
+        /*if (orderListObject!=null){ //Проверка на NullPointerException
+            orderListObject.addOrder(new Order(orderListObject.getUniqueID(), "Anna", "+79218594578", "Просвещения 49", 10));
+            // Добавляем к заказу товары
+            if (orderListObject.findOrder(1)!=null) orderListObject.findOrder(1).addProductToOrderList(1, ProductListObject, 5);
+            else System.out.println("Введен не верный номер заказа");
+            if (orderListObject.findOrder(1)!=null) orderListObject.findOrder(1).addProductToOrderList(1, ProductListObject, 4);
+            else System.out.println("Введен не верный номер заказа");
         
-        orderListObject.addOrder(new Order(orderListObject.getUniqueNumber(), "Olga", "+79215123262", "Фучика 4"));
-        if (orderListObject.findOrder(2)!=null) orderListObject.findOrder(2).addProductToList(2, storageObject, 5);
-        else System.out.println("Введен не верный номер заказа");
-        if (orderListObject.findOrder(2)!=null) orderListObject.findOrder(2).addProductToList(5, storageObject, 10);
-        else System.out.println("Введен не верный номер заказа");*/
+            orderListObject.addOrder(new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4"));
+            if (orderListObject.findOrder(2)!=null) orderListObject.findOrder(2).addProductToOrderList(2, ProductListObject, 1);
+            else System.out.println("Введен не верный номер заказа");
+            if (orderListObject.findOrder(2)!=null) orderListObject.findOrder(2).addProductToOrderList(3, ProductListObject, 1);
+            else System.out.println("Введен не верный номер заказа");
+        }else System.out.println("orderListObject == null");*/
         
         //Выводим на печать заказы
-        System.out.println("\"--------Список заказов--------\"");
-        for (Order ord : orderListObject.getOrderList()){
-            System.out.println(ord);
-            for (Product prod : ord.getProductList()){System.out.println(prod);}
+        System.out.println("--------Список заказов--------");
+        for (Order order : orderListObject.getList()){
+            System.out.println(order);
+            for (Product prod : order.getList()) {System.out.println(prod);}
         }
         
-        //Записываем файл со списками товаров и заказов
-        try {
-            FileListWriter.listWrite(storageObject, orderListObject);
-        } catch (IOException e) {
-        }
+        //Записываем файл со списком товаров
+        try {FileListOrders.fileWrite(orderListObject);
+        } catch (IOException e) {}
+        
+        //Записываем файл со списком заказов
+        try {FileListProducts.fileWrite(ProductListObject);
+        } catch (IOException e) {}
     }
 }
