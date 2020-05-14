@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 
+
 /**
  *
  * @author denis
@@ -20,15 +21,16 @@ import ru.avalon.java.dev.j12.labs.list.OrderList;
 public class FileListOrders {
     
     public static OrderList fileRead () throws FileNotFoundException, IOException, ClassNotFoundException{
-        FileInputStream fis = new FileInputStream("listorder.dat");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        return (OrderList)ois.readObject();
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("listorder.dat"));
+        OrderList obj = (OrderList)ois.readObject();
+        ois.close();
+        return obj;
     }
     
-    public static void fileWrite(OrderList orderListObject) throws FileNotFoundException, IOException{
-        FileOutputStream fos = new FileOutputStream("listorder.dat");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(orderListObject);
+    public static void fileWrite(OrderList obj) throws FileNotFoundException, IOException{
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("listorder.dat"));
+        oos.writeObject(obj);
         oos.close();
     }
 }
+

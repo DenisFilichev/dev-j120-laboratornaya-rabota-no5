@@ -26,7 +26,6 @@ public class ProductList implements Serializable{
     public ArrayList getList() {
         return list;
     }
-    
 
     //Метод для получения уникального артикула
     public Integer getUniqueID(){

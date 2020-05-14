@@ -30,7 +30,7 @@ public class Order implements Serializable, IDSearch {
     private String contactTel;
     private String address;
     private int discount = 0;
-    private OrderStatus orderStatus = OrderStatus.PREPARING;
+    private OrderStatus status = OrderStatus.PREPARING;
     
     //Конструктор для Заказа без скидки
     public Order(int ID, String contactName, String contactTel, String address) {
@@ -40,13 +40,23 @@ public class Order implements Serializable, IDSearch {
         this.address = address;
         this.ID = ID;
     }
-    
-    //Конструтор для заказа со скидкой
-    public Order(int ID, String contactName, String contactTel, String address, int discount) {
-        this(ID, contactName, contactTel, address);
+
+    /* Конструктор для создания объектов из файла.
+    В данном конструкторе не вызываются другие конструторы, т.к. в них устанавливается текущая дата,
+    а при восстановлении объектов из файла нам необходимо устанавливать прошедшую дату.
+    */
+    public Order(int ID, Date DATE, String contactName, String contactTel, String address, int discount, OrderStatus status) {
+        this.ID = ID;
+        this.DATE = DATE;
+        this.contactName = contactName;
+        this.contactTel = contactTel;
+        this.address = address;
         this.discount = discount;
+        this.status = status;
         
     }
+    
+    
     
     // добавление товара в заказ
     public void addProductToOrderList (int ID, ProductList productListObject, int quantity){
@@ -54,7 +64,9 @@ public class Order implements Serializable, IDSearch {
         int index = SearchByID.objectSearch(ID, productListObject.getList());
         Product prod = (Product)productListObject.getList().get(index);
         if (prod.getBalance() >= quantity){
-            Product prodOrder = new Product(prod.getID(), prod.getName(), prod.getColor(), (prod.getPrice()*((100-discount))/100), quantity);
+            Product prodOrder = new Product(prod.getID(), prod.getName(), prod.getColor());
+            prodOrder.setPrice(prod.getPrice()*((100-discount))/100);
+            prodOrder.setBalance(quantity);
             prod.setBalance(prod.getBalance()-quantity); // уменьшение остатка товара на складе
             PRODUCTLIST.add(prodOrder);
         } else System.out.println("Остаток товара на складе = " + prod.getBalance());
@@ -70,25 +82,36 @@ public class Order implements Serializable, IDSearch {
         PRODUCTLIST.remove(index1);
     }
     
+    /* Изменение скидки
+    Скидка должна быть в диапазоне от 0 до 100, в этом случае скидка
+    принимается и возвращается число 1, иначе возвращается число 0.
+    */
+    public int setDiscount(int discount) {
+        if (discount<0 || discount>100) return 0;
+        this.discount = discount;
+        return 1;
+    }
+    
     public void setContactName(String contactName) {this.contactName = contactName;}
     public void setContactTel(String contactTel) {this.contactTel = contactTel;}
     public void setAddress(String address) {this.address = address;}
-    public void setDiscount(int discount) {this.discount = discount;}
-    public void setOrderStatus(OrderStatus orderStatus) {this.orderStatus = orderStatus;}
+    public void setOrderStatus(OrderStatus orderStatus) {this.status = orderStatus;}
 
     public ArrayList<Product> getList() {return PRODUCTLIST;}
-    public int getID() {return ID;}
     public Date getDate() {return DATE;}
     public String getContactName() {return contactName;}
     public String getContactTel() {return contactTel;}
     public String getAddress() {return address;}
     public int getDiscount() {return discount;}
-    public OrderStatus getOrderStatus() {return orderStatus;}
-
+    public OrderStatus getOrderStatus() {return status;}
+    
+    @Override
+    public int getID() {return ID;}
+    
     @Override
     public String toString() {
         return "Order{" + "ID= " + ID + ", date= " + DATE + ", contactName= "
                 + contactName + ", contactTel= " + contactTel + ", address= " + address
-                + ", discount= " + discount + ", orderStatus= " + orderStatus + '}';
+                + ", discount= " + discount + ", orderStatus= " + status + '}';
     }
 }
