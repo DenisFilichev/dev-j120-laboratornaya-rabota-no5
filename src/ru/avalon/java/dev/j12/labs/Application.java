@@ -4,12 +4,9 @@ import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.models.Order;
 import ru.avalon.java.dev.j12.labs.models.Product;
-import java.io.IOException;
-import javax.swing.JTable;
 import ru.avalon.java.dev.j12.labs.controlers.FileListProducts;
 import ru.avalon.java.dev.j12.labs.controlers.FileListOrders;
 import ru.avalon.java.dev.j12.labs.forms.MainForm;
-import ru.avalon.java.dev.j12.labs.forms.OrderListForm;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -61,22 +58,14 @@ public class Application {
             productListObject.addProduct(prod);
             
         } else System.out.println("ProductListObject == null");
-    
-        System.out.println("--------Список товараров на складе--------");
-            for (Object obj : productListObject.getList()){
-            System.out.println(obj);
-        }
-        
 
         //Создаем новый заказ
         Order order;
         order = new Order(orderListObject.getUniqueID(), "Anna", "+79218594578", "Просвещения 49");
         order.addProductToOrderList(1, productListObject, 5);
-        order.addProductToOrderList(2, productListObject, 3);
         orderListObject.addOrder(order);
         
         order = new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4");
-        order.addProductToOrderList(1, productListObject, 1);
         order.addProductToOrderList(2, productListObject, 1);
         orderListObject.addOrder(order);
         

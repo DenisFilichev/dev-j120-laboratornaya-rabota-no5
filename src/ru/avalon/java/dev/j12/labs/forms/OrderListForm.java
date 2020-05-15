@@ -64,7 +64,7 @@ public class OrderListForm extends JFrame implements TableModel{
             case 3: return o.getContactTel();
             case 4: return o.getAddress();
             case 5: return o.getDiscount();
-            default: throw new Error("Unreachable plase");
+            default: throw new Error("Unreachable place");
         }
     }
 

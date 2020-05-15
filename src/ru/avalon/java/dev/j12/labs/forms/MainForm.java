@@ -16,6 +16,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 
 /**
@@ -26,7 +27,6 @@ public class MainForm extends JFrame{
     
     OrderListForm orderListForm;
     ProductListForm productListForm;
-    private JTextArea content;
     
     public MainForm(ArrayList list){
         super("Работа с заказами");
@@ -36,12 +36,8 @@ public class MainForm extends JFrame{
         setBounds(300, 200, 900, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        //JPanel tablePane = new JPanel(new BorderLayout());
         JTable tblor = new JTable(orderListForm);
         JTable tblpr = new JTable(productListForm);
-        
-        content = new JTextArea();
-        content.setEditable(false);
         
         JSplitPane splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
                 new JScrollPane(tblor),
@@ -49,21 +45,20 @@ public class MainForm extends JFrame{
         splitpane.setDividerLocation(300);
         add(splitpane);
         
-        //tablePane.add(new JScrollPane(tbl), BorderLayout.CENTER);
-        //tablePane.add(tbl.getTableHeader(), BorderLayout.NORTH);
-        //add(tablePane, BorderLayout.CENTER);
+        tblor.getSelectionModel().addListSelectionListener(e -> {
+            int i = tblor.getSelectedRow();
+            productListForm.setList(OrderList.orderListObject.getList().get(i).getList());
+        });
         
+        JToolBar toolBar1 = new JToolBar();
+        add(toolBar1, BorderLayout.NORTH);
         
+        JButton addOrder = new JButton("добавить заказ");
+        toolBar1.add(addOrder);
+        addOrder.addActionListener(e -> orderListForm.buttonAdd());
         
-        JToolBar toolBar = new JToolBar();
-        add(toolBar, BorderLayout.SOUTH);
-        
-        JButton add = new JButton("add");
-        toolBar.add(add);
-        add.addActionListener(e -> orderListForm.buttonAdd());
-        
-        JButton delete = new JButton("delete");
-        toolBar.add(delete);
+        JButton delete = new JButton("удалить заказ");
+        toolBar1.add(delete);
         
         delete.addActionListener(e -> {
             int [] rows = tblor.getSelectedRows();
@@ -76,7 +71,16 @@ public class MainForm extends JFrame{
             //    JOptionPane.showMessageDialog(this, "Удаление не получилось", "Error", JOptionPane.ERROR_MESSAGE);
         });
         
-        JButton edit = new JButton("edit");
-        toolBar.add(edit);
+        JButton edit = new JButton("редактировать заказ");
+        toolBar1.add(edit);
+        
+        JToolBar toolBar2 = new JToolBar();
+        add(toolBar2, BorderLayout.SOUTH);
+        
+        JButton addProd = new JButton("добавить товар");
+        toolBar2.add(addProd);
+        
+        JButton deleteProd = new JButton("Удалить товар");
+        toolBar2.add(deleteProd);
     }
 }

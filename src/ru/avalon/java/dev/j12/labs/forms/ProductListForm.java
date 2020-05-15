@@ -8,6 +8,7 @@ package ru.avalon.java.dev.j12.labs.forms;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import ru.avalon.java.dev.j12.labs.models.Product;
@@ -32,6 +33,14 @@ public class ProductListForm extends JFrame implements TableModel {
     public ProductListForm (ArrayList <Product> list){
         this.list = list;
     }
+
+    public void setList(ArrayList<Product> list) {
+        this.list = list;
+        TableModelEvent e = new TableModelEvent(this);
+        for (TableModelListener l : listeners) l.tableChanged(e);
+    }
+    
+    
     
     @Override
     public int getRowCount() {return list.size();}
