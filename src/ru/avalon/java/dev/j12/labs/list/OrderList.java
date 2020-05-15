@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * @author denis
  */
 public class OrderList implements Serializable{
+    public final static OrderList orderListObject = new OrderList();
     final ArrayList <Order> orderList = new ArrayList<>();
     
     public void addOrder (Order order){

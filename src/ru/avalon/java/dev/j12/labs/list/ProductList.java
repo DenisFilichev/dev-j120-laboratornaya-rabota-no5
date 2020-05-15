@@ -16,6 +16,7 @@ import java.util.Comparator;
  * @author denis
  */
 public class ProductList implements Serializable{
+    public final static ProductList productListObject = new ProductList();
     ArrayList<Product> list = new ArrayList<>();
     
     public void addProduct(Product product) {
@@ -31,9 +32,9 @@ public class ProductList implements Serializable{
     public Integer getUniqueID(){
         if (list == null) return 0;
         if(list.isEmpty()) return 1;
-        Integer num=1;
-        for (Object obj : list){
-            if (((Product)obj).getID()>num) num = ((Product)obj).getID();
+        int num=1;
+        for (Product prod : list){
+            if (prod.getID()>num) num = prod.getID();
         }
         return num+1;
     }
