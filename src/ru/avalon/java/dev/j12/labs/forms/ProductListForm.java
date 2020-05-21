@@ -93,16 +93,12 @@ public class ProductListForm extends JFrame implements TableModel {
         int ID = order.getList().get(index).getID();
         order.delProduct(ID, ProductList.productListObject);
         update();
-        /*TableModelEvent e = new TableModelEvent(this);
-        for (TableModelListener l : listeners) l.tableChanged(e);*/
         return  true;
     }
 
     public void setOrder(Order order) {
         this.order = order;
         update();
-        /*TableModelEvent e = new TableModelEvent(this);
-        for (TableModelListener l : listeners) l.tableChanged(e);*/
     }
     
     public void addProduct (){
@@ -110,8 +106,10 @@ public class ProductListForm extends JFrame implements TableModel {
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Product prod = dlf.getProduct();
-            ProductList.productListObject.getList().add(prod);
-            JOptionPane.showMessageDialog(this, "Новы товар добавлен, ID=" + prod.getID(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            if (prod != null){
+                ProductList.productListObject.getList().add(prod);
+                JOptionPane.showMessageDialog(this, "Новы товар добавлен, ID=" + prod.getID(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            } else addProduct();
         }
         update();
         /*TableModelEvent e = new TableModelEvent(this, ProductList.productListObject.getList().size()-1,
@@ -131,7 +129,8 @@ public class ProductListForm extends JFrame implements TableModel {
             if (query.isSucccess()){
                 quantity = query.getQuantity();
             }
-            order.addProductToOrderList(ID, quantity);
+            if (order.addProductToOrderList(ID, quantity)){update();}
+            else JOptionPane.showMessageDialog(this, "Ошибка! Возможно введенное количество товара больше остатка на складе или меньше 1.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

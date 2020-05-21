@@ -29,20 +29,20 @@ public class Product implements Serializable, IDSearch {
     Стоимость должна быть не ниже или равной 0, в этом случае стоимость
     принимается и возвращается число 1, иначе возвращается число 0.
     */
-    public int setPrice(int price) {
-        if (price <=0) return 0;
+    public boolean setPrice(int price) {
+        if (price <=0) return false;
         this.price = price;
-        return 1;
+        return true;
     }
     
     /* Изменение количества товара
     Количество должно быть не ниже 0, в этом случае количество
     принимается и возвращается число 1, иначе возвращается число 0.
     */
-    public int setBalance(Integer balance) {
-        if (balance <0) return 0;
+    public boolean setBalance(Integer balance) {
+        if (balance <0) return false;
         this.balance = balance;
-        return 1;
+        return true;
     }
     
     public void setName(String name) {this.name = name;}

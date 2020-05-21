@@ -10,6 +10,7 @@ import java.awt.Frame;
 import java.text.NumberFormat;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static ru.avalon.java.dev.j12.labs.list.ProductList.productListObject;
@@ -70,14 +71,22 @@ public class AddProductListDialogForm extends DialogForm{
     }
 
     public Product getProduct (){
-        String name = jname.getText();
-        String color = jcolor.getText();
-        int price = Integer.parseInt(jprice.getText());
-        int balance = Integer.parseInt(jbalance.getText());
-        Product prod = new Product(productListObject.getUniqueID(), name, color);
-        prod.setPrice(price);
-        prod.setBalance(balance);
-        return prod;
+        String name, color;
+        int price, balance;
+        try {
+            name = jname.getText();
+            color = jcolor.getText();
+            price = Integer.parseInt(jprice.getText());
+            balance = Integer.parseInt(jbalance.getText());
+            Product prod = new Product(productListObject.getUniqueID(), name, color);
+            if (prod.setPrice(price)){} else throw new NumberFormatException();
+            if (prod.setBalance(balance)){} else throw new NumberFormatException();
+            return prod;
+        }
+        catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(this, "Ошибка! Не верные параметры полей.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
     }
     
 }

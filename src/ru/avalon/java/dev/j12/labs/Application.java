@@ -48,13 +48,13 @@ public class Application {
         //Создаем единицы товаров и помещаем их на склад
         if (productListObject!=null){ //Проверка на NullPointerException
             Product prod = new Product(productListObject.getUniqueID(), "banana", "yellow");
-            if (prod.setPrice(56)!=1) System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (prod.setBalance(100)!=1) System.out.println("Количество не может быть ниже нуля");
+            if (!prod.setPrice(56)) System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (!prod.setBalance(100)) System.out.println("Количество не может быть ниже нуля");
             productListObject.addProduct(prod);
             
             prod = new Product(productListObject.getUniqueID(), "apple", "green");
-            if (prod.setPrice(48)!=1)  System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (prod.setBalance(200)!=1)  System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (!prod.setPrice(48))  System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (!prod.setBalance(200))  System.out.println("Стоимость не может быть ниже или равной нулю");
             productListObject.addProduct(prod);
             
         } else System.out.println("ProductListObject == null");

@@ -59,21 +59,29 @@ public class Order implements Serializable, IDSearch {
     
     
     // добавление товара в заказ
-    public void addProductToOrderList (int ID, int quantity){
+    public boolean addProductToOrderList (int ID, int quantity){
         ArrayList <Product> list = ProductList.productListObject.getList();
-        if (list==null || list.isEmpty()) return;
+        if (list==null || list.isEmpty()) return false;
         int index = SearchByID.objectSearch(ID, list);
         Product prod = list.get(index);
-        if (prod.getBalance() >= quantity){
+        if (prod.getBalance() >= quantity && quantity > 0){
             Product prodOrder = new Product(prod.getID(), prod.getName(), prod.getColor());
             prodOrder.setPrice(prod.getPrice()*((100-discount))/100);
             prodOrder.setBalance(quantity);
             prod.setBalance(prod.getBalance()-quantity); // уменьшение остатка товара на складе
+            //Проверка на дублирование товара в заказе
+            for (Product i : PRODUCTLIST){
+                if (i.getID()==prodOrder.getID()){
+                    i.setBalance(i.getBalance()+prodOrder.getBalance());
+                    return true;
+                }
+            }
             PRODUCTLIST.add(prodOrder);
-        } else System.out.println("Остаток товара на складе = " + prod.getBalance());
+            return true;
+        } else return false;
     }
     
-    // Удаление товара из заказа и передача количества товара на складе
+    // Удаление товара из заказа и передача товара на склад
     public void delProduct (int ID, ProductList productListObject){
         int index1 = SearchByID.objectSearch(ID, PRODUCTLIST);
         int index2 = SearchByID.objectSearch(ID, productListObject.getList());
