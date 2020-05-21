@@ -6,13 +6,14 @@
 package ru.avalon.java.dev.j12.labs.forms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
@@ -36,7 +37,11 @@ public class OrderListForm extends JFrame implements TableModel{
     
     public OrderListForm(ArrayList list) {
         this.list = list;
-        
+    }
+    
+    public void update (){
+        TableModelEvent e = new TableModelEvent(this);
+        for (TableModelListener l : listeners) l.tableChanged(e);
     }
 
     @Override
@@ -77,24 +82,52 @@ public class OrderListForm extends JFrame implements TableModel{
     @Override
     public void removeTableModelListener(TableModelListener l) {listeners.remove(l);}
     
-    public void buttonAdd () {
-        Order order = new Order(OrderList.orderListObject.getUniqueID(), "Fedya", "+79218594578", "Наличная 3");
+    public void buttonAdd (Order order) {
         OrderList.orderListObject.addOrder(order);
-        
-        TableModelEvent e = new TableModelEvent(this, OrderList.orderListObject.getList().size()-1,
+        update();
+        /*TableModelEvent e = new TableModelEvent(this, OrderList.orderListObject.getList().size()-1,
                 OrderList.orderListObject.getList().size()-1, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
-        for (TableModelListener l : listeners) l.tableChanged(e);
+        for (TableModelListener l : listeners) l.tableChanged(e);*/
     }
     
     public boolean buttonDelete (int index) {
         if (OrderList.orderListObject.getList().isEmpty()) return false;
+        if (!OrderList.orderListObject.getList().get(index).getList().isEmpty()){
+            Order order;
+            int ind = OrderList.orderListObject.getList().get(index).getList().size();
+            for (int i = 0; i < ind; i++){
+                order = OrderList.orderListObject.getList().get(index);
+                int ID = order.getList().get(0).getID();
+                order.delProduct(ID, ProductList.productListObject);
+            }
+        }
+        
         OrderList.orderListObject.getList().remove(index);
-        TableModelEvent e = new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-        for (TableModelListener l : listeners) l.tableChanged(e);
+        update();
+        /*TableModelEvent e = new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+        for (TableModelListener l : listeners) l.tableChanged(e);*/
         return true;
     }
     
     public void buttonEdit () {
         
+    }
+    
+    public void addOrder (){
+        OrderDialogForm dlf = new OrderDialogForm(this);
+        dlf.setVisible(true);
+        if(dlf.isSucccess()){
+            Order order = dlf.getOrder();
+            OrderList.orderListObject.getList().add(order);
+        }
+        update();
+    }
+    
+    public void delOrder (JTable tblor){
+        int [] rows = tblor.getSelectedRows();
+            Arrays.sort(rows);
+            for (int i = rows.length-1 ; i>=0 ; i--){
+                this.buttonDelete(rows[i]);
+            }
     }
 }

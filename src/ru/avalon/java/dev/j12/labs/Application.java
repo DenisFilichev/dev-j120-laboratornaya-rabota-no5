@@ -49,12 +49,12 @@ public class Application {
         if (productListObject!=null){ //Проверка на NullPointerException
             Product prod = new Product(productListObject.getUniqueID(), "banana", "yellow");
             if (prod.setPrice(56)!=1) System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (prod.setBalance(10)!=1) System.out.println("Количество не может быть ниже нуля");
+            if (prod.setBalance(100)!=1) System.out.println("Количество не может быть ниже нуля");
             productListObject.addProduct(prod);
             
             prod = new Product(productListObject.getUniqueID(), "apple", "green");
             if (prod.setPrice(48)!=1)  System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (prod.setBalance(20)!=1)  System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (prod.setBalance(200)!=1)  System.out.println("Стоимость не может быть ниже или равной нулю");
             productListObject.addProduct(prod);
             
         } else System.out.println("ProductListObject == null");
@@ -62,11 +62,11 @@ public class Application {
         //Создаем новый заказ
         Order order;
         order = new Order(orderListObject.getUniqueID(), "Anna", "+79218594578", "Просвещения 49");
-        order.addProductToOrderList(1, productListObject, 5);
+        order.addProductToOrderList(1, 5);
         orderListObject.addOrder(order);
         
         order = new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4");
-        order.addProductToOrderList(2, productListObject, 1);
+        order.addProductToOrderList(2, 1);
         orderListObject.addOrder(order);
         
         //Выводим на печать заказы

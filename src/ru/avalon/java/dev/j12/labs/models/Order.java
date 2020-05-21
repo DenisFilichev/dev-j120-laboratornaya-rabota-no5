@@ -59,10 +59,11 @@ public class Order implements Serializable, IDSearch {
     
     
     // добавление товара в заказ
-    public void addProductToOrderList (int ID, ProductList productListObject, int quantity){
-        if (productListObject==null || productListObject.getList().isEmpty()) return;
-        int index = SearchByID.objectSearch(ID, productListObject.getList());
-        Product prod = (Product)productListObject.getList().get(index);
+    public void addProductToOrderList (int ID, int quantity){
+        ArrayList <Product> list = ProductList.productListObject.getList();
+        if (list==null || list.isEmpty()) return;
+        int index = SearchByID.objectSearch(ID, list);
+        Product prod = list.get(index);
         if (prod.getBalance() >= quantity){
             Product prodOrder = new Product(prod.getID(), prod.getName(), prod.getColor());
             prodOrder.setPrice(prod.getPrice()*((100-discount))/100);
