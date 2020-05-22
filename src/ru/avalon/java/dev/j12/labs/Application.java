@@ -21,12 +21,15 @@ import ru.avalon.java.dev.j12.labs.controlers.*;
 public class Application {
     public static ProductList productListObject = new ProductList();//.productListObject; // Создаем объект для хранения товаров
     public static OrderList orderListObject = new  OrderList();//.orderListObject; // Создаем объект для хранения заказов
+    public static Application app;
     
     public static ProductList getProductList() {
         return productListObject;
     }
 
     public static void main(String[] args) {
+        
+        app = new Application();
         
         // Считываем список продуктов из файла
         try{
@@ -39,8 +42,6 @@ public class Application {
             orderListObject = FileListOrders.fileRead();
         }catch (IOException | ClassNotFoundException e){System.out.println("IOException");
         }catch (NullPointerException r){System.out.println("NullPointerException");}
-        System.out.println("Длина orderListObject = " + orderListObject.getList().size());
-        System.out.println("Длина списка заказа" + orderListObject.getList().get(0).getList().get(0));
         
         /*if (productListObject==null){productListObject=new ProductList();}
         if (orderListObject==null){orderListObject=new OrderList();}
@@ -70,8 +71,10 @@ public class Application {
         orderListObject.addOrder(order);*/
         
         MainForm mfm = new MainForm(orderListObject.getList());
-        mfm.setVisible(true);
-        
+        mfm.setVisible(true); 
+    }
+    
+    public void saveFile (){
         //Записываем файл со списком товаров
         try {FileListOrders.fileWrite(orderListObject);
         } catch (IOException e) {}

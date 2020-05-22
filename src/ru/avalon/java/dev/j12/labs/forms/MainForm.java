@@ -6,6 +6,8 @@
 package ru.avalon.java.dev.j12.labs.forms;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JButton;
@@ -20,6 +22,7 @@ import javax.swing.JTable;
 import ru.avalon.java.dev.j12.labs.list.*;
 import ru.avalon.java.dev.j12.labs.models.*;
 import ru.avalon.java.dev.j12.labs.*;
+import static ru.avalon.java.dev.j12.labs.Application.app;
 import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
 import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 
@@ -58,9 +61,33 @@ public class MainForm extends JFrame{
         
         setSize(900, 600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                app.saveFile();
+                dispose();
+            }
 
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.exit(0);
+            }
+            
+        });
+        /*addWindowStateListener(e -> {
+            if (e.getNewState() == WindowEvent.WINDOW_CLOSING){
+                System.out.println("Вызываем метод saveFile()");
+                app.saveFile();
+                dispose();
+                return;
+            }
+            if (e.getNewState() == WindowEvent.WINDOW_CLOSED) {
+                System.out.println("Вызываем метод");
+                System.exit(0);
+            }
+        });*/
+        
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //---------------------------JMenuBar-----------------------
         add(jmb, BorderLayout.NORTH);
