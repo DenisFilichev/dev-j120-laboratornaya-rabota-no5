@@ -9,9 +9,9 @@ import java.io.Serializable;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import java.util.ArrayList;
 import java.util.Date;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 import ru.avalon.java.dev.j12.labs.controlers.IDSearch;
 import ru.avalon.java.dev.j12.labs.controlers.SearchByID;
-
 
 /**
  *
@@ -60,7 +60,7 @@ public class Order implements Serializable, IDSearch {
     
     // добавление товара в заказ
     public boolean addProductToOrderList (int ID, int quantity){
-        ArrayList <Product> list = ProductList.productListObject.getList();
+        ArrayList <Product> list = productListObject.getList();
         if (list==null || list.isEmpty()) return false;
         int index = SearchByID.objectSearch(ID, list);
         Product prod = list.get(index);

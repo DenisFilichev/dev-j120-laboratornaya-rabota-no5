@@ -1,12 +1,12 @@
 package ru.avalon.java.dev.j12.labs;
 
+import java.io.IOException;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.models.Order;
 import ru.avalon.java.dev.j12.labs.models.Product;
-import ru.avalon.java.dev.j12.labs.controlers.FileListProducts;
-import ru.avalon.java.dev.j12.labs.controlers.FileListOrders;
 import ru.avalon.java.dev.j12.labs.forms.MainForm;
+import ru.avalon.java.dev.j12.labs.controlers.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,8 +19,8 @@ import ru.avalon.java.dev.j12.labs.forms.MainForm;
  * @author denis
  */
 public class Application {
-    private static ProductList productListObject = ProductList.productListObject; // Создаем объект для хранения товаров
-    public static OrderList orderListObject = OrderList.orderListObject; // Создаем объект для хранения заказов
+    public static ProductList productListObject = new ProductList();//.productListObject; // Создаем объект для хранения товаров
+    public static OrderList orderListObject = new  OrderList();//.orderListObject; // Создаем объект для хранения заказов
     
     public static ProductList getProductList() {
         return productListObject;
@@ -29,20 +29,20 @@ public class Application {
     public static void main(String[] args) {
         
         // Считываем список продуктов из файла
-        /*try{
-                productListObject = FileListProducts.fileRead();
+        try{
+            productListObject = FileListProducts.fileRead();
         }catch (IOException | ClassNotFoundException e){
         }catch (NullPointerException r){System.out.println("NullPointerException");}
         
         // Считываем список заказов из файла
         try{
-
-                orderListObject = FileListOrders.fileRead();
-
+            orderListObject = FileListOrders.fileRead();
         }catch (IOException | ClassNotFoundException e){System.out.println("IOException");
-        }catch (NullPointerException r){System.out.println("NullPointerException");}*/
+        }catch (NullPointerException r){System.out.println("NullPointerException");}
+        System.out.println("Длина orderListObject = " + orderListObject.getList().size());
+        System.out.println("Длина списка заказа" + orderListObject.getList().get(0).getList().get(0));
         
-        if (productListObject==null){productListObject=new ProductList();}
+        /*if (productListObject==null){productListObject=new ProductList();}
         if (orderListObject==null){orderListObject=new OrderList();}
         
         //Создаем единицы товаров и помещаем их на склад
@@ -67,14 +67,10 @@ public class Application {
         
         order = new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4");
         order.addProductToOrderList(2, 1);
-        orderListObject.addOrder(order);
+        orderListObject.addOrder(order);*/
         
-        //Выводим на печать заказы
-        /*System.out.println("--------Список заказов--------");
-        for (Order order : orderListObject.getList()){
-            System.out.println(order);
-            for (Product prod : order.getList()) {System.out.println(prod);}
-        }
+        MainForm mfm = new MainForm(orderListObject.getList());
+        mfm.setVisible(true);
         
         //Записываем файл со списком товаров
         try {FileListOrders.fileWrite(orderListObject);
@@ -82,9 +78,6 @@ public class Application {
         
         //Записываем файл со списком заказов
         try {FileListProducts.fileWrite(productListObject);
-        } catch (IOException e) {}*/
-        
-        MainForm mfm = new MainForm(orderListObject.getList());
-        mfm.setVisible(true);
+        } catch (IOException e) {}
     }
 }

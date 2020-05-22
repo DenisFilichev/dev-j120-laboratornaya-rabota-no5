@@ -19,6 +19,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import ru.avalon.java.dev.j12.labs.list.*;
 import ru.avalon.java.dev.j12.labs.models.*;
+import ru.avalon.java.dev.j12.labs.*;
+import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 
 /**
  *
@@ -76,7 +79,7 @@ public class MainForm extends JFrame{
         jmb.add(jmProduct);
         jmProduct.add(jmiProductList);
         jmiProductList.addActionListener (e -> {
-            ProductDialogForm pdf = new ProductDialogForm(this, ProductList.productListObject.getList());
+            ProductDialogForm pdf = new ProductDialogForm(this, productListObject.getList());
             pdf.setVisible(true);
         });
         jmProduct.add(jmiAddProduct);
@@ -139,7 +142,7 @@ public class MainForm extends JFrame{
         tblor.getSelectionModel().addListSelectionListener(e -> {
             if (tblor.getSelectedRow()!=-1){
                 int i = tblor.getSelectedRow();
-                order = OrderList.orderListObject.getList().get(i);
+                order = orderListObject.getList().get(i);
                 productListForm.setList(order.getList(), order);
                 jmiDelOrder.setEnabled(true);
                 delOrder.setEnabled(true);

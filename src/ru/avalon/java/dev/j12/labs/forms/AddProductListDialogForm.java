@@ -13,7 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import static ru.avalon.java.dev.j12.labs.list.ProductList.productListObject;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
+//import static ru.avalon.java.dev.j12.labs.list.ProductList.productListObject;
 import ru.avalon.java.dev.j12.labs.models.Product;
 
 /**

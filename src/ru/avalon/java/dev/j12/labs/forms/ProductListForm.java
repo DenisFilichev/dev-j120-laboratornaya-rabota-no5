@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
 import ru.avalon.java.dev.j12.labs.models.Product;
@@ -91,7 +92,7 @@ public class ProductListForm extends JFrame implements TableModel {
     public boolean buttonDelete (int index){
         if (list.isEmpty()) return false;
         int ID = order.getList().get(index).getID();
-        order.delProduct(ID, ProductList.productListObject);
+        order.delProduct(ID, productListObject);
         update();
         return  true;
     }
@@ -107,7 +108,7 @@ public class ProductListForm extends JFrame implements TableModel {
         if(dlf.isSucccess()){
             Product prod = dlf.getProduct();
             if (prod != null){
-                ProductList.productListObject.getList().add(prod);
+                productListObject.getList().add(prod);
                 JOptionPane.showMessageDialog(this, "Новы товар добавлен, ID=" + prod.getID(), "Error", JOptionPane.INFORMATION_MESSAGE);
             } else addProduct();
         }

@@ -16,7 +16,7 @@ import java.util.Comparator;
  * @author denis
  */
 public class ProductList implements Serializable{
-    public final static ProductList productListObject = new ProductList();
+    //public final static ProductList productListObject = new ProductList();
     ArrayList<Product> list = new ArrayList<>();
     
     public void addProduct(Product product) {

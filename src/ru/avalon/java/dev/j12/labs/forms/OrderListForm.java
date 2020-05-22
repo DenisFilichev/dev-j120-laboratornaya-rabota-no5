@@ -14,6 +14,8 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
@@ -83,7 +85,7 @@ public class OrderListForm extends JFrame implements TableModel{
     public void removeTableModelListener(TableModelListener l) {listeners.remove(l);}
     
     public void buttonAdd (Order order) {
-        OrderList.orderListObject.addOrder(order);
+        orderListObject.addOrder(order);
         update();
         /*TableModelEvent e = new TableModelEvent(this, OrderList.orderListObject.getList().size()-1,
                 OrderList.orderListObject.getList().size()-1, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
@@ -91,18 +93,18 @@ public class OrderListForm extends JFrame implements TableModel{
     }
     
     public boolean buttonDelete (int index) {
-        if (OrderList.orderListObject.getList().isEmpty()) return false;
-        if (!OrderList.orderListObject.getList().get(index).getList().isEmpty()){
+        if (orderListObject.getList().isEmpty()) return false;
+        if (!orderListObject.getList().get(index).getList().isEmpty()){
             Order order;
-            int ind = OrderList.orderListObject.getList().get(index).getList().size();
+            int ind = orderListObject.getList().get(index).getList().size();
             for (int i = 0; i < ind; i++){
-                order = OrderList.orderListObject.getList().get(index);
+                order = orderListObject.getList().get(index);
                 int ID = order.getList().get(0).getID();
-                order.delProduct(ID, ProductList.productListObject);
+                order.delProduct(ID, productListObject);
             }
         }
         
-        OrderList.orderListObject.getList().remove(index);
+        orderListObject.getList().remove(index);
         update();
         /*TableModelEvent e = new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
         for (TableModelListener l : listeners) l.tableChanged(e);*/
@@ -118,7 +120,7 @@ public class OrderListForm extends JFrame implements TableModel{
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Order order = dlf.getOrder();
-            OrderList.orderListObject.getList().add(order);
+            orderListObject.getList().add(order);
         }
         update();
     }

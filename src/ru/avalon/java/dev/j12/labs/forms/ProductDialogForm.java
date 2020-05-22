@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Product;
 
@@ -24,13 +25,13 @@ public class ProductDialogForm extends DialogForm{
     public ProductDialogForm(Frame owner, ArrayList <Product> list) {
         super(owner, "Товары");
         
-        if (ProductList.productListObject.getList().equals(list)){
+        if (productListObject.getList().equals(list)){
             btnEditVisible(true);
             btnOk.addActionListener(e -> new ProductListForm(list).addProduct());
             
         }
         
-        ProductListForm productListForm = new ProductListForm(ProductList.productListObject.getList());
+        ProductListForm productListForm = new ProductListForm(productListObject.getList());
         
         JPanel controlsPane = getControlsPane();
         
@@ -39,7 +40,7 @@ public class ProductDialogForm extends DialogForm{
         
         tbl.getSelectionModel().addListSelectionListener(e -> {
             int index = tbl.getSelectedRow();
-            product = (Product)ProductList.productListObject.getList().get(index);
+            product = (Product)productListObject.getList().get(index);
         });
         setSize(900, 600);
         setLocationRelativeTo(null);

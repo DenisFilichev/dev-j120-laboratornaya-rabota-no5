@@ -5,13 +5,8 @@
  */
 package ru.avalon.java.dev.j12.labs.forms;
 
-import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.text.NumberFormat;
-import javax.swing.BoxLayout;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
