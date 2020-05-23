@@ -21,8 +21,8 @@ public class SearchByID {
     public static <T extends IDSearch>int objectSearch (int ID, ArrayList <T> list){
         int i = -1;
         if (list.isEmpty()) return i;
-        for (Object obj : list){
-            if (((T)obj).getID()==ID){
+        for (T obj : list){
+            if (obj.getID()==ID){
                 i = list.indexOf(obj);
             }
         }

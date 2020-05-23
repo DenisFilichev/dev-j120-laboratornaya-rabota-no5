@@ -20,14 +20,14 @@ import ru.avalon.java.dev.j12.labs.list.ProductList;
  */
 public class FileListProducts {
     
-    public static ProductList fileRead () throws FileNotFoundException, IOException, ClassNotFoundException{
+    public ProductList fileRead () throws FileNotFoundException, IOException, ClassNotFoundException{
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream("listproduct.dat"));
         ProductList obj = (ProductList)ois.readObject();
         ois.close();
         return obj;
     }
     
-    public static void fileWrite (ProductList obj) throws FileNotFoundException, IOException{
+    public void fileWrite (ProductList obj) throws FileNotFoundException, IOException{
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("listproduct.dat"));
         oos.writeObject(obj);
         oos.close();

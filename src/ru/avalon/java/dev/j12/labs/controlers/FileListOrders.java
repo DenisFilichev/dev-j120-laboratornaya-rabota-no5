@@ -20,14 +20,14 @@ import ru.avalon.java.dev.j12.labs.list.OrderList;
  */
 public class FileListOrders {
     
-    public static OrderList fileRead () throws FileNotFoundException, IOException, ClassNotFoundException{
+    public OrderList fileRead () throws FileNotFoundException, IOException, ClassNotFoundException{
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream("listorder.dat"));
         OrderList obj = (OrderList)ois.readObject();
         ois.close();
         return obj;
     }
     
-    public static void fileWrite(OrderList obj) throws FileNotFoundException, IOException{
+    public void fileWrite(OrderList obj) throws FileNotFoundException, IOException{
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("listorder.dat"));
         oos.writeObject(obj);
         oos.close();

@@ -1,6 +1,8 @@
 package ru.avalon.java.dev.j12.labs;
 
 import java.io.IOException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.models.Order;
@@ -33,15 +35,25 @@ public class Application {
         
         // Считываем список продуктов из файла
         try{
-            productListObject = FileListProducts.fileRead();
+            productListObject = new FileListProducts().fileRead();
         }catch (IOException | ClassNotFoundException e){
-        }catch (NullPointerException r){System.out.println("NullPointerException");}
+            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }catch (NullPointerException r){
+            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
         
         // Считываем список заказов из файла
         try{
-            orderListObject = FileListOrders.fileRead();
-        }catch (IOException | ClassNotFoundException e){System.out.println("IOException");
-        }catch (NullPointerException r){System.out.println("NullPointerException");}
+            orderListObject = new FileListOrders().fileRead();
+        }catch (IOException | ClassNotFoundException e){
+            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные Заказов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }catch (NullPointerException r){
+            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные заказов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
         
         /*if (productListObject==null){productListObject=new ProductList();}
         if (orderListObject==null){orderListObject=new OrderList();}
@@ -76,11 +88,15 @@ public class Application {
     
     public void saveFile (){
         //Записываем файл со списком товаров
-        try {FileListOrders.fileWrite(orderListObject);
-        } catch (IOException e) {}
+        try {new FileListOrders().fileWrite(orderListObject);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
         //Записываем файл со списком заказов
-        try {FileListProducts.fileWrite(productListObject);
-        } catch (IOException e) {}
+        try {new FileListProducts().fileWrite(productListObject);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
