@@ -1,7 +1,14 @@
 package ru.avalon.java.dev.j12.labs;
 
-import java.util.Iterator;
-import ru.avalon.java.dev.j12.labs.orders.*;
+import java.io.IOException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import ru.avalon.java.dev.j12.labs.list.ProductList;
+import ru.avalon.java.dev.j12.labs.list.OrderList;
+import ru.avalon.java.dev.j12.labs.models.Order;
+import ru.avalon.java.dev.j12.labs.models.Product;
+import ru.avalon.java.dev.j12.labs.forms.MainForm;
+import ru.avalon.java.dev.j12.labs.controlers.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,42 +21,82 @@ import ru.avalon.java.dev.j12.labs.orders.*;
  * @author denis
  */
 public class Application {
-    private final static Storage storage = new Storage(); // Создаем экземпляр Storage для хранения товаров
-    public final static OrderList orderList = new OrderList(); // Создаем экземпляр OrderList для хранения заказов
-
-    public static Storage getStorage() {
-        return storage;
+    public static ProductList productListObject = new ProductList();//.productListObject; // Создаем объект для хранения товаров
+    public static OrderList orderListObject = new  OrderList();//.orderListObject; // Создаем объект для хранения заказов
+    public static Application app;
+    
+    public static ProductList getProductList() {
+        return productListObject;
     }
 
     public static void main(String[] args) {
+        
+        app = new Application();
+        
+        // Считываем список продуктов из файла
+        try{
+            productListObject = new FileListProducts().fileRead();
+        }catch (IOException | ClassNotFoundException e){
+            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }catch (NullPointerException r){
+            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+        
+        // Считываем список заказов из файла
+        try{
+            orderListObject = new FileListOrders().fileRead();
+        }catch (IOException | ClassNotFoundException e){
+            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные Заказов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }catch (NullPointerException r){
+            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные заказов", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+        
+        /*if (productListObject==null){productListObject=new ProductList();}
+        if (orderListObject==null){orderListObject=new OrderList();}
+        
         //Создаем единицы товаров и помещаем их на склад
-        storage.addProduct(new Product(storage.getUniqueNumber(), "banana", "yellow", 56, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "apple", "green", 48, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "grape", "red", 67, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "orange", "orange", 65, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "pear", "green", 78, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "strawberries", "red", 63, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "lemon", "yellow", 44, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "avocado", "green", 98, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "plum", "blue", 49, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "plumBlack", "black", 49, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "apple", "red", 45, 100));
-        storage.addProduct(new Product(storage.getUniqueNumber(), "banana", "yellow", 50, 100));
+        if (productListObject!=null){ //Проверка на NullPointerException
+            Product prod = new Product(productListObject.getUniqueID(), "banana", "yellow");
+            if (!prod.setPrice(56)) System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (!prod.setBalance(100)) System.out.println("Количество не может быть ниже нуля");
+            productListObject.addProduct(prod);
+            
+            prod = new Product(productListObject.getUniqueID(), "apple", "green");
+            if (!prod.setPrice(48))  System.out.println("Стоимость не может быть ниже или равной нулю");
+            if (!prod.setBalance(200))  System.out.println("Стоимость не может быть ниже или равной нулю");
+            productListObject.addProduct(prod);
+            
+        } else System.out.println("ProductListObject == null");
+
+        //Создаем новый заказ
+        Order order;
+        order = new Order(orderListObject.getUniqueID(), "Anna", "+79218594578", "Просвещения 49");
+        order.addProductToOrderList(1, 5);
+        orderListObject.addOrder(order);
+        
+        order = new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4");
+        order.addProductToOrderList(2, 1);
+        orderListObject.addOrder(order);*/
+        
+        MainForm mfm = new MainForm(orderListObject.getList());
+        mfm.setVisible(true); 
+    }
     
-        System.out.println("--------Список товараров на складе--------");
-        Iterator <Product> itrP = storage.getStorage().iterator();
-        while(itrP.hasNext())System.out.println(itrP.next());
+    public void saveFile (){
+        //Записываем файл со списком товаров
+        try {new FileListOrders().fileWrite(orderListObject);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
-        System.out.println("--------Заказы--------");
-        orderList.addOrder(new Order(orderList.getUniqueNumber(), "Anna", "+79218594578", "Просвещения 49", 10));
-        orderList.findOrder(1).addProductToList(2, storage, 5);
-        orderList.findOrder(1).addProductToList(5, storage, 10);
-        
-        
-        orderList.addOrder(new Order(orderList.getUniqueNumber(), "Olga", "+79215123262", "Фучика 4"));
-        orderList.findOrder(2).addProductToList(2, storage, 5);
-        orderList.findOrder(2).addProductToList(5, storage, 10);
-        Iterator itrO = orderList.getOrderList().iterator();
-        while (itrO.hasNext()) System.out.println(itrO.next());
+        //Записываем файл со списком заказов
+        try {new FileListProducts().fileWrite(productListObject);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

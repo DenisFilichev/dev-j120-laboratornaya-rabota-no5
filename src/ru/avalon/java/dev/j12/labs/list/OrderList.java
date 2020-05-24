@@ -3,45 +3,43 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.dev.j12.labs.orders;
+package ru.avalon.java.dev.j12.labs.list;
 
+import java.io.Serializable;
+import ru.avalon.java.dev.j12.labs.models.Order;
 import java.util.ArrayList;
 
 /**
  *
  * @author denis
  */
-public class OrderList{
-    ArrayList <Order> orderList = new ArrayList<>();
+public class OrderList implements Serializable{
+    //public final static OrderList orderListObject = new OrderList();
+    final ArrayList <Order> orderList = new ArrayList<>();
     
     public void addOrder (Order order){
         orderList.add(order);
     }
 
-    public ArrayList<Order> getOrderList() {
+    public ArrayList<Order> getList() {
         return orderList;
     }
     
     //Метод для получения уникального ID заказа
-    public Integer getUniqueNumber(){
+    public Integer getUniqueID(){
         if (orderList==null) return 0;
         if (orderList.isEmpty()) return 1;
         Integer i = 1;
         for (Object obj : orderList){
-            if (((Order)obj).getIdOrder()>=i) i=((Order)obj).getIdOrder();
+            if (((Order)obj).getID()>=i) i=((Order)obj).getID();
         }
         return i+1;
     }
     
     //Метод для поиска заказа по его ID
-    public Order findOrder (Integer id){
-        try{
+    public Order findOrder (int id){
         for (Object obj : orderList){
-            if (((Order)obj).getIdOrder()==id) return (Order)obj;
-        }
-        throw new NullPointerException();
-        }catch (NullPointerException e){
-            System.out.println("Введен не существующий номер заказа");
+            if (((Order)obj).getID()==id) return (Order)obj;
         }
         return null;
     }
@@ -50,6 +48,4 @@ public class OrderList{
     public String toString() {
         return "OrderList{" + "orderList=" + orderList + '}';
     }
-    
-    
 }
