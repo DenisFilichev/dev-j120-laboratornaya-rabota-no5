@@ -1,6 +1,13 @@
 package ru.avalon.java.dev.j12.labs;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
@@ -29,58 +36,39 @@ public class Application {
         return productListObject;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         
-        app = new Application();
-        
-        // Считываем список продуктов из файла
-        try{
+        app = new Application();   
+            
+        try {
+            //Считываем данные из db
+            productListObject = new DBProduct().dbRead();
+            orderListObject = new DBOrders().dbRead();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "База данных недоступна.\nДанные будут взяты из резервной копии.", "Error", JOptionPane.ERROR_MESSAGE);
+            
+            // Считываем список продуктов из файла
+            try{
             productListObject = new FileListProducts().fileRead();
-        }catch (IOException | ClassNotFoundException e){
+            }catch (IOException | ClassNotFoundException e){
             JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-        }catch (NullPointerException r){
+            }catch (NullPointerException r){
             JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-        }
-        
-        // Считываем список заказов из файла
-        try{
+            }
+            
+            // Считываем список заказов из файла
+            try{
             orderListObject = new FileListOrders().fileRead();
-        }catch (IOException | ClassNotFoundException e){
+            }catch (IOException | ClassNotFoundException e){
             JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные Заказов", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-        }catch (NullPointerException r){
+            }catch (NullPointerException r){
             JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные заказов", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
+            }
         }
-        
-        /*if (productListObject==null){productListObject=new ProductList();}
-        if (orderListObject==null){orderListObject=new OrderList();}
-        
-        //Создаем единицы товаров и помещаем их на склад
-        if (productListObject!=null){ //Проверка на NullPointerException
-            Product prod = new Product(productListObject.getUniqueID(), "banana", "yellow");
-            if (!prod.setPrice(56)) System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (!prod.setBalance(100)) System.out.println("Количество не может быть ниже нуля");
-            productListObject.addProduct(prod);
-            
-            prod = new Product(productListObject.getUniqueID(), "apple", "green");
-            if (!prod.setPrice(48))  System.out.println("Стоимость не может быть ниже или равной нулю");
-            if (!prod.setBalance(200))  System.out.println("Стоимость не может быть ниже или равной нулю");
-            productListObject.addProduct(prod);
-            
-        } else System.out.println("ProductListObject == null");
-
-        //Создаем новый заказ
-        Order order;
-        order = new Order(orderListObject.getUniqueID(), "Anna", "+79218594578", "Просвещения 49");
-        order.addProductToOrderList(1, 5);
-        orderListObject.addOrder(order);
-        
-        order = new Order(orderListObject.getUniqueID(), "Olga", "+79215123262", "Фучика 4");
-        order.addProductToOrderList(2, 1);
-        orderListObject.addOrder(order);*/
         
         MainForm mfm = new MainForm(orderListObject.getList());
         mfm.setVisible(true); 

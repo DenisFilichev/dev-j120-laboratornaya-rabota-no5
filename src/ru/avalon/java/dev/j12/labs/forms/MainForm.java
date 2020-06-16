@@ -8,8 +8,11 @@ package ru.avalon.java.dev.j12.labs.forms;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -93,7 +96,13 @@ public class MainForm extends JFrame{
         add(jmb, BorderLayout.NORTH);
         jmb.add(jmOrder);
         jmOrder.add(jmiAddOrder);
-        jmiAddOrder.addActionListener(e -> orderListForm.addOrder());
+        jmiAddOrder.addActionListener(e -> {
+            try {
+                orderListForm.addOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         jmiDelOrder.setEnabled(false);
         jmOrder.add(jmiDelOrder);
         jmiDelOrder.addActionListener(e -> {
@@ -110,7 +119,13 @@ public class MainForm extends JFrame{
             pdf.setVisible(true);
         });
         jmProduct.add(jmiAddProduct);
-        jmiAddProduct.addActionListener(e -> productListForm.addProduct());
+        jmiAddProduct.addActionListener(e -> {
+            try {
+                productListForm.addProduct();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         
         //------------------------JSplitPane---------------------------
         
@@ -128,7 +143,13 @@ public class MainForm extends JFrame{
         
         //Кнопка "добавить заказ"
         panel.add(addOrder);
-        addOrder.addActionListener(e -> orderListForm.addOrder());
+        addOrder.addActionListener(e -> {
+            try {
+                orderListForm.addOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         
         //Кнопка "удалить заказ"
         panel.add(delOrder);

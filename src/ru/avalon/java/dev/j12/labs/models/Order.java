@@ -8,7 +8,9 @@ package ru.avalon.java.dev.j12.labs.models;
 import java.io.Serializable;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.sql.Date;
+import java.util.GregorianCalendar;
 import static ru.avalon.java.dev.j12.labs.Application.productListObject;
 import ru.avalon.java.dev.j12.labs.controlers.IDSearch;
 import ru.avalon.java.dev.j12.labs.controlers.SearchByID;
@@ -23,7 +25,8 @@ enum OrderStatus {
 }
 
 public class Order implements Serializable, IDSearch {
-    private final int ID;
+    private int ID = 0;
+    GregorianCalendar calendar = new GregorianCalendar();
     private final Date DATE;
     private final ArrayList <Product> PRODUCTLIST = new ArrayList<>(); // Переменная для хранения списка заказанных товаров
     private String contactName;
@@ -34,7 +37,8 @@ public class Order implements Serializable, IDSearch {
     
     //Конструктор для Заказа без скидки
     public Order(int ID, String contactName, String contactTel, String address) {
-        DATE = new Date();
+        DATE = new Date(calendar.getTimeInMillis());
+        //DATE = new Date();
         this.contactName = contactName;
         this.contactTel = contactTel;
         this.address = address;
@@ -45,21 +49,22 @@ public class Order implements Serializable, IDSearch {
     В данном конструкторе не вызываются другие конструторы, т.к. в них устанавливается текущая дата,
     а при восстановлении объектов из файла нам необходимо устанавливать прошедшую дату.
     */
-    public Order(int ID, Date DATE, String contactName, String contactTel, String address, int discount, OrderStatus status) {
+    public Order(int ID, Date DATE, String contactName, String contactTel, String address, int discount){//, OrderStatus status) {
+        DATE = new Date(calendar.getTimeInMillis());
         this.ID = ID;
         this.DATE = DATE;
         this.contactName = contactName;
         this.contactTel = contactTel;
         this.address = address;
         this.discount = discount;
-        this.status = status;
+        //this.status = status;
         
     }
     
     
     
     // добавление товара в заказ
-    public boolean addProductToOrderList (int ID, int quantity){
+    public boolean addProductToOrder (int ID, int quantity){
         ArrayList <Product> list = productListObject.getList();
         if (list==null || list.isEmpty()) return false;
         int index = SearchByID.objectSearch(ID, list);
@@ -79,6 +84,11 @@ public class Order implements Serializable, IDSearch {
             PRODUCTLIST.add(prodOrder);
             return true;
         } else return false;
+    }
+    
+    //
+    public void addProductToOrder (Product prod){
+        PRODUCTLIST.add(prod);
     }
     
     // Удаление товара из заказа и передача товара на склад

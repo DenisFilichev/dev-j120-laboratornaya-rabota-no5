@@ -5,6 +5,7 @@
  */
 package ru.avalon.java.dev.j12.labs.forms;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
 import static ru.avalon.java.dev.j12.labs.Application.productListObject;
+import ru.avalon.java.dev.j12.labs.controlers.DBOrders;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
@@ -115,12 +117,13 @@ public class OrderListForm extends JFrame implements TableModel{
         
     }
     
-    public void addOrder (){
+    public void addOrder () throws SQLException{
         OrderDialogForm dlf = new OrderDialogForm(this);
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Order order = dlf.getOrder();
             orderListObject.getList().add(order);
+            new DBOrders().addOrder(order);
         }
         update();
     }

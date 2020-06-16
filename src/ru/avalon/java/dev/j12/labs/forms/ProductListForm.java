@@ -5,6 +5,7 @@
  */
 package ru.avalon.java.dev.j12.labs.forms;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import static ru.avalon.java.dev.j12.labs.Application.productListObject;
+import ru.avalon.java.dev.j12.labs.controlers.DBProduct;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
 import ru.avalon.java.dev.j12.labs.models.Product;
@@ -102,14 +104,15 @@ public class ProductListForm extends JFrame implements TableModel {
         update();
     }
     
-    public void addProduct (){
+    public void addProduct () throws SQLException{
         AddProductListDialogForm dlf = new AddProductListDialogForm(this);
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Product prod = dlf.getProduct();
             if (prod != null){
+                prod = new DBProduct().addProduct(prod);
                 productListObject.getList().add(prod);
-                JOptionPane.showMessageDialog(this, "Новы товар добавлен, ID=" + prod.getID(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Новы товар добавлен, ID=" + prod.getID(), "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
             } else addProduct();
         }
         update();
@@ -130,7 +133,7 @@ public class ProductListForm extends JFrame implements TableModel {
             if (query.isSucccess()){
                 quantity = query.getQuantity();
             }
-            if (order.addProductToOrderList(ID, quantity)){update();}
+            if (order.addProductToOrder(ID, quantity)){update();}
             else JOptionPane.showMessageDialog(this, "Ошибка! Возможно введенное количество товара больше остатка на складе или меньше 1.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

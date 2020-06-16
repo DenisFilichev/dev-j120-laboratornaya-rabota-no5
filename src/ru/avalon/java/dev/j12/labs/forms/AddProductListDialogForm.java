@@ -79,7 +79,7 @@ public class AddProductListDialogForm extends DialogForm{
             color = jcolor.getText();
             price = Integer.parseInt(jprice.getText());
             balance = Integer.parseInt(jbalance.getText());
-            Product prod = new Product(productListObject.getUniqueID(), name, color);
+            Product prod = new Product(name, color);
             if (prod.setPrice(price)){} else throw new NumberFormatException();
             if (prod.setBalance(balance)){} else throw new NumberFormatException();
             return prod;
