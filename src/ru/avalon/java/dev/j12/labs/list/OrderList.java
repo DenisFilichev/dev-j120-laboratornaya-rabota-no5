@@ -26,7 +26,7 @@ public class OrderList implements Serializable{
     }
     
     //Метод для получения уникального ID заказа
-    public Integer getUniqueID(){
+    /*public Integer getUniqueID(){
         if (orderList==null) return 0;
         if (orderList.isEmpty()) return 1;
         Integer i = 1;
@@ -34,7 +34,7 @@ public class OrderList implements Serializable{
             if (((Order)obj).getID()>=i) i=((Order)obj).getID();
         }
         return i+1;
-    }
+    }*/
     
     //Метод для поиска заказа по его ID
     public Order findOrder (int id){

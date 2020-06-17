@@ -106,7 +106,11 @@ public class MainForm extends JFrame{
         jmiDelOrder.setEnabled(false);
         jmOrder.add(jmiDelOrder);
         jmiDelOrder.addActionListener(e -> {
-            orderListForm.delOrder(tblor);
+            try {
+                orderListForm.delOrder(tblor);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jmiDelOrder.setEnabled(false);
             delOrder.setEnabled(false);
             deleteProd.setEnabled(false);
@@ -155,7 +159,11 @@ public class MainForm extends JFrame{
         panel.add(delOrder);
         delOrder.setEnabled(false);
         delOrder.addActionListener(e -> {
-            orderListForm.delOrder(tblor);
+            try {
+                orderListForm.delOrder(tblor);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jmiDelOrder.setEnabled(false);
             delOrder.setEnabled(false);
             deleteProd.setEnabled(false);
@@ -168,9 +176,13 @@ public class MainForm extends JFrame{
         panel.add(addProd);
         addProd.setEnabled(false);
         addProd.addActionListener(e -> {
-            productListForm.addProductToOrder();
-            /*ProductDialogForm pdf = new ProductDialogForm(this);
-            pdf.setVisible(true);*/
+            try {
+                productListForm.addProductToOrder();
+                /*ProductDialogForm pdf = new ProductDialogForm(this);
+                pdf.setVisible(true);*/
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         //Кнопка "Удалить товар из заказа"
@@ -180,7 +192,11 @@ public class MainForm extends JFrame{
             int [] rows = tblpr.getSelectedRows();
             Arrays.sort(rows);
             for (int i=rows.length-1; i>=0; i--) {
-                productListForm.buttonDelete(rows[i]);
+                try {
+                    productListForm.buttonDelete(rows[i]);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             deleteProd.setEnabled(false);
         });

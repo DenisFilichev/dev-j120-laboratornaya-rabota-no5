@@ -47,7 +47,7 @@ public class Application {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(new JFrame(), "База данных недоступна.\nДанные будут взяты из резервной копии.", "Error", JOptionPane.ERROR_MESSAGE);
             
-            // Считываем список продуктов из файла
+            // Считываем список продуктов из файла, в случае не доступности derby
             try{
             productListObject = new FileListProducts().fileRead();
             }catch (IOException | ClassNotFoundException e){
@@ -58,7 +58,7 @@ public class Application {
             System.exit(0);
             }
             
-            // Считываем список заказов из файла
+            // Считываем список заказов из файла, в случае не доступности derby
             try{
             orderListObject = new FileListOrders().fileRead();
             }catch (IOException | ClassNotFoundException e){
@@ -75,13 +75,13 @@ public class Application {
     }
     
     public void saveFile (){
-        //Записываем файл со списком товаров
+        //Записываем резервный файл со списком товаров
         try {new FileListOrders().fileWrite(orderListObject);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
-        //Записываем файл со списком заказов
+        //Записываем резервный файл со списком заказов
         try {new FileListProducts().fileWrite(productListObject);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -94,7 +94,7 @@ public class OrderListForm extends JFrame implements TableModel{
         for (TableModelListener l : listeners) l.tableChanged(e);*/
     }
     
-    public boolean buttonDelete (int index) {
+    public boolean buttonDelete (int index) throws SQLException {
         if (orderListObject.getList().isEmpty()) return false;
         if (!orderListObject.getList().get(index).getList().isEmpty()){
             Order order;
@@ -105,7 +105,7 @@ public class OrderListForm extends JFrame implements TableModel{
                 order.delProduct(ID, productListObject);
             }
         }
-        
+        new DBOrders().delOrder(orderListObject.getList().get(index));
         orderListObject.getList().remove(index);
         update();
         /*TableModelEvent e = new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
@@ -122,13 +122,12 @@ public class OrderListForm extends JFrame implements TableModel{
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Order order = dlf.getOrder();
-            orderListObject.getList().add(order);
-            new DBOrders().addOrder(order);
+            orderListObject.getList().add(new DBOrders().addOrder(order));
         }
         update();
     }
     
-    public void delOrder (JTable tblor){
+    public void delOrder (JTable tblor) throws SQLException{
         int [] rows = tblor.getSelectedRows();
             Arrays.sort(rows);
             for (int i = rows.length-1 ; i>=0 ; i--){

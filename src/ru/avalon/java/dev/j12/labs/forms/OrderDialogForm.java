@@ -68,9 +68,12 @@ public class OrderDialogForm extends DialogForm{
         String name = contactName.getText();
         String tel = contactTel.getText();
         String ad = address.getText();
-        int dsc = Integer.parseInt(discount.getText());
-        Order order = new Order(orderListObject.getUniqueID(), name, tel, ad);
-        order.setDiscount(dsc);
+        String ds = discount.getText();
+        Order order = new Order(name, tel, ad);
+        if (ds.length() != 0) {
+            int dsc = Integer.parseInt(ds);
+            order.setDiscount(dsc);
+        }
         return order;
     }
 }

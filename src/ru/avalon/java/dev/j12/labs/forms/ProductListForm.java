@@ -91,7 +91,7 @@ public class ProductListForm extends JFrame implements TableModel {
     @Override
     public void removeTableModelListener(TableModelListener l) {listeners.remove(l);}
     
-    public boolean buttonDelete (int index){
+    public boolean buttonDelete (int index) throws SQLException{
         if (list.isEmpty()) return false;
         int ID = order.getList().get(index).getID();
         order.delProduct(ID, productListObject);
@@ -121,7 +121,7 @@ public class ProductListForm extends JFrame implements TableModel {
         for (TableModelListener l : listeners) l.tableChanged(e);*/
     }
     
-    public void addProductToOrder (){
+    public void addProductToOrder () throws SQLException{
         ProductDialogForm pdf = new ProductDialogForm(this, list);
         pdf.setVisible(true);
         if (pdf.isSucccess()){
