@@ -39,13 +39,16 @@ public class MainForm extends JFrame{
     ProductListForm productListForm;
     Order order;
     
-    JMenuBar jmb = new JMenuBar();
+    JMenuBar jMenuBar = new JMenuBar();
     JMenu jmOrder = new JMenu("Заказы");
     JMenuItem jmiAddOrder = new JMenuItem("Добавить заказ");
     JMenuItem jmiDelOrder = new JMenuItem("Удалить заказ");
     JMenu jmProduct = new JMenu("Склад");
     JMenuItem jmiProductList = new JMenuItem("Посмотреть склад");
     JMenuItem jmiAddProduct = new JMenuItem("Новый продукт");
+    JMenu jmTools = new JMenu("Сервис");
+    JMenuItem jmiProperties = new JMenuItem("Настройки");
+    JMenuItem jmiBD = new JMenuItem("Создать таблицы DB");
     
     JTable tblor;
     JTable tblpr;
@@ -93,8 +96,8 @@ public class MainForm extends JFrame{
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //---------------------------JMenuBar-----------------------
-        add(jmb, BorderLayout.NORTH);
-        jmb.add(jmOrder);
+        add(jMenuBar, BorderLayout.NORTH);
+        jMenuBar.add(jmOrder);
         jmOrder.add(jmiAddOrder);
         jmiAddOrder.addActionListener(e -> {
             try {
@@ -116,7 +119,7 @@ public class MainForm extends JFrame{
             deleteProd.setEnabled(false);
             addProd.setEnabled(false);
             });
-        jmb.add(jmProduct);
+        jMenuBar.add(jmProduct);
         jmProduct.add(jmiProductList);
         jmiProductList.addActionListener (e -> {
             ProductDialogForm pdf = new ProductDialogForm(this, productListObject.getList());
@@ -130,6 +133,12 @@ public class MainForm extends JFrame{
                 Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        jMenuBar.add(jmTools);
+        jmTools.add(jmiProperties);
+        
+        jmTools.add(jmiBD);
+        
+        
         
         //------------------------JSplitPane---------------------------
         

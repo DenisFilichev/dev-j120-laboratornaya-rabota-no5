@@ -13,8 +13,11 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import ru.avalon.java.dev.j12.labs.Config;
 import ru.avalon.java.dev.j12.labs.models.Order;
 import ru.avalon.java.dev.j12.labs.models.Product;
 //import ru.avalon.java.dev.j12.labs.models.OrderStatus;
@@ -24,13 +27,14 @@ import ru.avalon.java.dev.j12.labs.models.Product;
  *
  * @author denis
  */
-public class DBOrders {
+public class DBOrders extends InitialOrders{
     OrderList ordlist = new OrderList();
     ArrayList <Product> prodlist = new ArrayList();
     Order order;
-    private final String SHOP = "jdbc:derby:D:\\MyJavaDB\\shop";
-    private final String USER = "root";
-    private final String PAS = "root";
+    Config DBproperties = new Config();
+    private final String SHOP = DBproperties.getDBhost();
+    private final String USER = DBproperties.getDBlogin();
+    private final String PAS = DBproperties.getDBpassword();
     private final String SELECT_ORDERS = "SELECT * FROM ORDERS";
     private final String SELECT_SOLD_PRODUCTS = "SELECT * FROM SOLD_PRODUCTS";
     private final String INSERT =
@@ -43,7 +47,43 @@ public class DBOrders {
     private final String DELETE_ORDER = "delete from ORDERS where ID=%s";
     private final String DELETE_PRODUCT_TO_ORDER = "delete from SOLD_PRODUCTS where ID_PRODUCTS=%s AND ID_ORDERS=%s";
     
-    public OrderList dbRead () throws SQLException{
+    
+    @Override
+    public OrderList readOrders() {
+        System.out.println("SHOP =" + DBproperties.getDBhost());
+        try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
+            Statement statement = connection.createStatement();
+            Statement statement2 = connection.createStatement();
+            ResultSet  resultset = statement.executeQuery(SELECT_ORDERS);
+            ResultSet  resultset2 = statement2.executeQuery(SELECT_SOLD_PRODUCTS))
+        {
+            
+            while (resultset.next()){
+                order = new Order(resultset.getDate("DATE"),
+                        resultset.getString("CONTACTNAME"), resultset.getString("CONTACTTEL"),
+                        resultset.getString("ADDRESS"), resultset.getInt("DISCOUNT"));
+                order.setID(resultset.getInt("ID"));
+                ordlist.addOrder(order);
+            }
+            while (resultset2.next()){
+                for (Order ord : ordlist.getList()){
+                    if (resultset2.getInt("ID_ORDERS") == ord.getID()){
+                        Product prod = new Product(resultset2.getString("NAME"), resultset2.getString("COLOR"));
+                        prod.setID(resultset2.getInt("ID_PRODUCTS"));
+                        prod.setPrice(resultset2.getInt("PRICE"));
+                        prod.setBalance(resultset2.getInt("AMOUNT"));
+                        ord.addProductToOrder(prod);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOrders.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ordlist;
+    }
+    
+    /*public OrderList dbRead () throws SQLException{
+        System.out.println("SHOP =" + DBproperties.getDBhost());
         try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
             Statement statement = connection.createStatement();
             Statement statement2 = connection.createStatement();
@@ -71,7 +111,10 @@ public class DBOrders {
             }
         }
         return ordlist;
-    }
+    }*/
+    
+        @Override
+    public void writeOrders(OrderList orderList) {}
     
     public Order addOrder (Order order) throws SQLException{
         try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
@@ -86,8 +129,8 @@ public class DBOrders {
             }
             order.setID(ID);
         }catch (SQLException e){
-            JOptionPane.showMessageDialog(new JFrame(), "База данных не доступна,"
-                    + "\nизменения будут сохранены в резервную копию.", "Error", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(new JFrame(), "База данных не доступна,"
+            //       + "\nизменения будут сохранены в резервную копию.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return order;
     }

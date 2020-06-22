@@ -38,34 +38,27 @@ public class Application {
 
     public static void main(String[] args) throws SQLException {
         
-        app = new Application();   
-            
-        try {
-            //Считываем данные из db
-            productListObject = new DBProduct().dbRead();
-            orderListObject = new DBOrders().dbRead();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "База данных недоступна.\nДанные будут взяты из резервной копии.", "Error", JOptionPane.ERROR_MESSAGE);
-            
-            // Считываем список продуктов из файла, в случае не доступности derby
+        app = new Application();  
+        
+        Config config = new Config();
+        if (config.getWorkingData()==0){
+            try {
+                //Считываем данные из db
+                System.out.println("new Config().getWorkingData()=" + config.getWorkingData());
+                productListObject = new DBProduct().dbRead();
+                orderListObject = new DBOrders().readOrders();
+                System.out.println("new Config().getWorkingData()=" + config.getWorkingData());
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(new JFrame(), "База данных недоступна.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+        }if (config.getWorkingData()==1) {
+            // Считываем список продуктов и заказов из файла
             try{
             productListObject = new FileListProducts().fileRead();
-            }catch (IOException | ClassNotFoundException e){
-            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-            }catch (NullPointerException r){
-            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные продуктов", "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-            }
-            
-            // Считываем список заказов из файла, в случае не доступности derby
-            try{
-            orderListObject = new FileListOrders().fileRead();
-            }catch (IOException | ClassNotFoundException e){
-            JOptionPane.showMessageDialog(new JFrame(), "Не доступны исходные данные Заказов", "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-            }catch (NullPointerException r){
-            JOptionPane.showMessageDialog(new JFrame(), "Не удалось прочитать исходные данные заказов", "Error", JOptionPane.ERROR_MESSAGE);
+            orderListObject = new FileListOrders().readOrders();
+            }catch (Exception e){
+            JOptionPane.showMessageDialog(new JFrame(), "Файл данных недоступен.", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
             }
         }
@@ -76,14 +69,14 @@ public class Application {
     
     public void saveFile (){
         //Записываем резервный файл со списком товаров
-        try {new FileListOrders().fileWrite(orderListObject);
-        } catch (IOException e) {
+        try {new FileListOrders().writeOrders(orderListObject);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
         //Записываем резервный файл со списком заказов
         try {new FileListProducts().fileWrite(productListObject);
-        } catch (IOException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
