@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -39,13 +40,13 @@ public class DBOrders extends InitialOrders{
     private final String SELECT_SOLD_PRODUCTS = "SELECT * FROM SOLD_PRODUCTS";
     private final String INSERT =
             "insert into ORDERS (DATE, CONTACTNAME, CONTACTTEL, ADDRESS, DISCOUNT)"
-            + "values ('%s', '%s', '%s', '%s', %s)";
+            + "values (?, ?, ?, ?, ?)";
     private final String INSERT_SOLD_PRODUCTS =
             "insert into SOLD_PRODUCTS (ID_PRODUCTS, ID_ORDERS, NAME, COLOR, PRICE, AMOUNT)"
-            + "values (%s, %s, '%s', '%s', %s, %s)";
-    private final String UPDATE_ADD_PRODUCT = "update PRODUCTS set balance=balance-%s where id=%s";
-    private final String DELETE_ORDER = "delete from ORDERS where ID=%s";
-    private final String DELETE_PRODUCT_TO_ORDER = "delete from SOLD_PRODUCTS where ID_PRODUCTS=%s AND ID_ORDERS=%s";
+            + "values (?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_ADD_PRODUCT = "update PRODUCTS set balance=balance-? where id=?";
+    private final String DELETE_ORDER = "delete from ORDERS where ID=?";
+    private final String DELETE_PRODUCT_TO_ORDER = "delete from SOLD_PRODUCTS where ID_PRODUCTS=? AND ID_ORDERS=?";
     
     
     @Override
@@ -76,9 +77,7 @@ public class DBOrders extends InitialOrders{
                     }
                 }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBOrders.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (SQLException ex) {}
         return ordlist;
     }
     
@@ -118,11 +117,14 @@ public class DBOrders extends InitialOrders{
     
     public Order addOrder (Order order) throws SQLException{
         try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
-                Statement statement = connection.createStatement();
                 ResultSet resultset = connection.createStatement().executeQuery(SELECT_ORDERS)){
-            statement.executeUpdate(String.format(INSERT, order.getDate(),
-                    order.getContactName(), order.getContactTel(),
-                    order.getAddress(), order.getDiscount()));
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
+            preparedStatement.setDate(1, order.getDate());
+            preparedStatement.setString(2, order.getContactName());
+            preparedStatement.setString(3, order.getContactTel());
+            preparedStatement.setString(4, order.getAddress());
+            preparedStatement.setInt(5, order.getDiscount());
+            preparedStatement.executeUpdate();
             int ID = 0;
             while (resultset.next()){
                 if (ID < resultset.getInt("ID")){ID = resultset.getInt("ID");}
@@ -136,21 +138,30 @@ public class DBOrders extends InitialOrders{
     }
     
     public void addProductToOrder (Product prod, Order order) throws SQLException{
-        try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
-                Statement statement = connection.createStatement()){
+        try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS)){
             //Добавляем товар в заказ
-            statement.executeUpdate(String.format(INSERT_SOLD_PRODUCTS, prod.getID(),
-                    order.getID(), prod.getName(), prod.getColor(), prod.getPrice(),
-                    prod.getBalance()));
+            PreparedStatement pst = connection.prepareStatement(INSERT_SOLD_PRODUCTS);
+            pst.setInt(1, prod.getID());
+            pst.setInt(2, order.getID());
+            pst.setString(3, prod.getName());
+            pst.setString(4, prod.getColor());
+            pst.setInt(5, prod.getPrice());
+            pst.setInt(6, prod.getBalance());
+            pst.executeUpdate();
+
             // Корректируем количество товара на складе
-            statement.executeUpdate(String.format(UPDATE_ADD_PRODUCT, prod.getBalance(), prod.getID()));
+            pst = connection.prepareStatement(UPDATE_ADD_PRODUCT);
+            pst.setInt(1, prod.getBalance());
+            pst.setInt(2, prod.getID());
+            pst.executeUpdate();
+            //statement.executeUpdate(String.format(UPDATE_ADD_PRODUCT, prod.getBalance(), prod.getID()));
         }
     }
     
     public void delOrder (Order  order) throws SQLException{
-        try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
-                Statement statement = connection.createStatement()){
-            statement.executeUpdate(String.format(DELETE_ORDER, order.getID()));
+        try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS)){
+            PreparedStatement pst = connection.prepareStatement(DELETE_ORDER);
+            pst.setInt(1, order.getID());
         }
     }
     
@@ -158,8 +169,14 @@ public class DBOrders extends InitialOrders{
         try (Connection connection = DriverManager.getConnection(SHOP, USER, PAS);
                 Statement statement = connection.createStatement()){
             //Удаляем продукт заказа
-            statement.executeUpdate(String.format(DELETE_PRODUCT_TO_ORDER, prod.getID(), order.getID()));
-            statement.executeUpdate(String.format(UPDATE_ADD_PRODUCT, prod.getBalance(), prod.getID()));
+            PreparedStatement pst = connection.prepareStatement(DELETE_PRODUCT_TO_ORDER);
+            pst.setInt(1, prod.getID());
+            pst.setInt(2, order.getID());
+
+            pst = connection.prepareStatement(UPDATE_ADD_PRODUCT);
+            pst.setInt(1, prod.getBalance());
+            pst.setInt(2, prod.getID());
+            pst.executeUpdate();
         }
     }
 }

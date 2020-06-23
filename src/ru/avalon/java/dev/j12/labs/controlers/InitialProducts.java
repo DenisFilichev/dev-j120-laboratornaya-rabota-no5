@@ -14,5 +14,5 @@ import ru.avalon.java.dev.j12.labs.list.ProductList;
 public abstract class InitialProducts {
     
     public abstract ProductList readProduct();
-    public abstract void writeProduct();
+    public abstract void writeProduct(ProductList obj);
 }

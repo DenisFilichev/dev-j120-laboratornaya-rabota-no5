@@ -44,18 +44,16 @@ public class Application {
         if (config.getWorkingData()==0){
             try {
                 //Считываем данные из db
-                System.out.println("new Config().getWorkingData()=" + config.getWorkingData());
-                productListObject = new DBProduct().dbRead();
+                productListObject = new DBProduct().readProduct();
                 orderListObject = new DBOrders().readOrders();
-                System.out.println("new Config().getWorkingData()=" + config.getWorkingData());
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(new JFrame(), "База данных недоступна.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
         }if (config.getWorkingData()==1) {
             // Считываем список продуктов и заказов из файла
             try{
-            productListObject = new FileListProducts().fileRead();
+            productListObject = new FileListProducts().readProduct();
             orderListObject = new FileListOrders().readOrders();
             }catch (Exception e){
             JOptionPane.showMessageDialog(new JFrame(), "Файл данных недоступен.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -75,7 +73,7 @@ public class Application {
         }
         
         //Записываем резервный файл со списком заказов
-        try {new FileListProducts().fileWrite(productListObject);
+        try {new FileListProducts().writeProduct(productListObject);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(new JFrame(), "Изменения не могут быть сохранены.", "Error", JOptionPane.ERROR_MESSAGE);
         }
