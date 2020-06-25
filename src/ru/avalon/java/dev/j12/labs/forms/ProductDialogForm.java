@@ -6,7 +6,10 @@
 package ru.avalon.java.dev.j12.labs.forms;
 
 import java.awt.Frame;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,7 +30,13 @@ public class ProductDialogForm extends DialogForm{
         
         if (productListObject.getList().equals(list)){
             btnEditVisible(true);
-            btnOk.addActionListener(e -> new ProductListForm(list).addProduct());
+            btnOk.addActionListener(e -> {
+                try {
+                    new ProductListForm(list).addProduct();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProductDialogForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
             
         }
         

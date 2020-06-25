@@ -5,6 +5,7 @@
  */
 package ru.avalon.java.dev.j12.labs.forms;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import static ru.avalon.java.dev.j12.labs.Application.orderListObject;
 import static ru.avalon.java.dev.j12.labs.Application.productListObject;
+import ru.avalon.java.dev.j12.labs.controlers.DBOrders;
 import ru.avalon.java.dev.j12.labs.list.OrderList;
 import ru.avalon.java.dev.j12.labs.list.ProductList;
 import ru.avalon.java.dev.j12.labs.models.Order;
@@ -92,7 +94,7 @@ public class OrderListForm extends JFrame implements TableModel{
         for (TableModelListener l : listeners) l.tableChanged(e);*/
     }
     
-    public boolean buttonDelete (int index) {
+    public boolean buttonDelete (int index) throws SQLException {
         if (orderListObject.getList().isEmpty()) return false;
         if (!orderListObject.getList().get(index).getList().isEmpty()){
             Order order;
@@ -103,7 +105,7 @@ public class OrderListForm extends JFrame implements TableModel{
                 order.delProduct(ID, productListObject);
             }
         }
-        
+        new DBOrders().delOrder(orderListObject.getList().get(index));
         orderListObject.getList().remove(index);
         update();
         /*TableModelEvent e = new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
@@ -115,17 +117,17 @@ public class OrderListForm extends JFrame implements TableModel{
         
     }
     
-    public void addOrder (){
+    public void addOrder () throws SQLException{
         OrderDialogForm dlf = new OrderDialogForm(this);
         dlf.setVisible(true);
         if(dlf.isSucccess()){
             Order order = dlf.getOrder();
-            orderListObject.getList().add(order);
+            orderListObject.getList().add(new DBOrders().addOrder(order));
         }
         update();
     }
     
-    public void delOrder (JTable tblor){
+    public void delOrder (JTable tblor) throws SQLException{
         int [] rows = tblor.getSelectedRows();
             Arrays.sort(rows);
             for (int i = rows.length-1 ; i>=0 ; i--){

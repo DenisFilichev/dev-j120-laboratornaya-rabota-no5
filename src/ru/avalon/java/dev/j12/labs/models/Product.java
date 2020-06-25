@@ -13,16 +13,24 @@ import ru.avalon.java.dev.j12.labs.controlers.IDSearch;
  * @author denis
  */
 public class Product implements Serializable, IDSearch {
-    private final int ID;
+    private int ID = 0;
     private String name;
     private String color;
     private int price = 0;
     private int balance = 0;
-
-    public Product(int ID, String name, String color) {
-        this.ID = ID;
+    
+    public Product (String name, String color){
         this.name = name;
         this.color = color;
+    }
+
+    public Product(int ID, String name, String color) {
+        this(name, color);
+        this.ID = ID;
+    }
+    
+    public void setID (int ID) {
+        if (this.ID==0){this.ID = ID;}
     }
     
     /* Изменение стоимости товара

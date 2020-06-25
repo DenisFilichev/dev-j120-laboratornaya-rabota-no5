@@ -8,8 +8,11 @@ package ru.avalon.java.dev.j12.labs.forms;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -36,13 +39,16 @@ public class MainForm extends JFrame{
     ProductListForm productListForm;
     Order order;
     
-    JMenuBar jmb = new JMenuBar();
+    JMenuBar jMenuBar = new JMenuBar();
     JMenu jmOrder = new JMenu("Заказы");
     JMenuItem jmiAddOrder = new JMenuItem("Добавить заказ");
     JMenuItem jmiDelOrder = new JMenuItem("Удалить заказ");
     JMenu jmProduct = new JMenu("Склад");
     JMenuItem jmiProductList = new JMenuItem("Посмотреть склад");
     JMenuItem jmiAddProduct = new JMenuItem("Новый продукт");
+    JMenu jmTools = new JMenu("Сервис");
+    JMenuItem jmiProperties = new JMenuItem("Настройки");
+    JMenuItem jmiBD = new JMenuItem("Создать таблицы DB");
     
     JTable tblor;
     JTable tblpr;
@@ -90,27 +96,56 @@ public class MainForm extends JFrame{
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //---------------------------JMenuBar-----------------------
-        add(jmb, BorderLayout.NORTH);
-        jmb.add(jmOrder);
+        add(jMenuBar, BorderLayout.NORTH);
+        jMenuBar.add(jmOrder);
         jmOrder.add(jmiAddOrder);
-        jmiAddOrder.addActionListener(e -> orderListForm.addOrder());
+        jmiAddOrder.addActionListener(e -> {
+            try {
+                orderListForm.addOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         jmiDelOrder.setEnabled(false);
         jmOrder.add(jmiDelOrder);
         jmiDelOrder.addActionListener(e -> {
-            orderListForm.delOrder(tblor);
+            try {
+                orderListForm.delOrder(tblor);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jmiDelOrder.setEnabled(false);
             delOrder.setEnabled(false);
             deleteProd.setEnabled(false);
             addProd.setEnabled(false);
             });
-        jmb.add(jmProduct);
+        jMenuBar.add(jmProduct);
         jmProduct.add(jmiProductList);
         jmiProductList.addActionListener (e -> {
             ProductDialogForm pdf = new ProductDialogForm(this, productListObject.getList());
             pdf.setVisible(true);
         });
         jmProduct.add(jmiAddProduct);
-        jmiAddProduct.addActionListener(e -> productListForm.addProduct());
+        jmiAddProduct.addActionListener(e -> {
+            try {
+                productListForm.addProduct();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        jMenuBar.add(jmTools);
+        jmTools.add(jmiProperties);
+        
+        jmTools.add(jmiBD);
+        jmiBD.addActionListener(e -> {
+            try {
+                new DefaultDB().createTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        
         
         //------------------------JSplitPane---------------------------
         
@@ -128,13 +163,23 @@ public class MainForm extends JFrame{
         
         //Кнопка "добавить заказ"
         panel.add(addOrder);
-        addOrder.addActionListener(e -> orderListForm.addOrder());
+        addOrder.addActionListener(e -> {
+            try {
+                orderListForm.addOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         
         //Кнопка "удалить заказ"
         panel.add(delOrder);
         delOrder.setEnabled(false);
         delOrder.addActionListener(e -> {
-            orderListForm.delOrder(tblor);
+            try {
+                orderListForm.delOrder(tblor);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jmiDelOrder.setEnabled(false);
             delOrder.setEnabled(false);
             deleteProd.setEnabled(false);
@@ -147,9 +192,13 @@ public class MainForm extends JFrame{
         panel.add(addProd);
         addProd.setEnabled(false);
         addProd.addActionListener(e -> {
-            productListForm.addProductToOrder();
-            /*ProductDialogForm pdf = new ProductDialogForm(this);
-            pdf.setVisible(true);*/
+            try {
+                productListForm.addProductToOrder();
+                /*ProductDialogForm pdf = new ProductDialogForm(this);
+                pdf.setVisible(true);*/
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         //Кнопка "Удалить товар из заказа"
@@ -159,7 +208,11 @@ public class MainForm extends JFrame{
             int [] rows = tblpr.getSelectedRows();
             Arrays.sort(rows);
             for (int i=rows.length-1; i>=0; i--) {
-                productListForm.buttonDelete(rows[i]);
+                try {
+                    productListForm.buttonDelete(rows[i]);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             deleteProd.setEnabled(false);
         });

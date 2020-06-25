@@ -29,7 +29,7 @@ public class ProductList implements Serializable{
     }
 
     //Метод для получения уникального артикула
-    public Integer getUniqueID(){
+    /*public Integer getUniqueID(){
         if (list == null) return 0;
         if(list.isEmpty()) return 1;
         int num=1;
@@ -37,7 +37,7 @@ public class ProductList implements Serializable{
             if (prod.getID()>num) num = prod.getID();
         }
         return num+1;
-    }
+    }*/
     
         @Override
     public String toString() {

@@ -21,6 +21,7 @@ public class OrderDialogForm extends DialogForm{
     private JTextField contactName;
     private JTextField contactTel;
     private JTextField address;
+    private JTextField discount;
     
     public OrderDialogForm(Frame owner) {
         super(owner, "Новый заказ");
@@ -51,6 +52,14 @@ public class OrderDialogForm extends DialogForm{
         p.add(address);
         controlsPane.add(p);
         
+        p = new JPanel (new FlowLayout(FlowLayout.LEFT));
+        discount = new JTextField(40);
+        jbl = new JLabel("Скидка");
+        jbl.setLabelFor(discount);
+        p.add(jbl);
+        p.add(discount);
+        controlsPane.add(p);
+        
         pack();
         setLocationRelativeTo(null);
     }
@@ -59,7 +68,12 @@ public class OrderDialogForm extends DialogForm{
         String name = contactName.getText();
         String tel = contactTel.getText();
         String ad = address.getText();
-        Order order = new Order(orderListObject.getUniqueID(), name, tel, ad);
+        String ds = discount.getText();
+        Order order = new Order(name, tel, ad);
+        if (ds.length() != 0) {
+            int dsc = Integer.parseInt(ds);
+            order.setDiscount(dsc);
+        }
         return order;
     }
 }
