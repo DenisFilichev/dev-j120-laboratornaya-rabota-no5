@@ -1,0 +1,44 @@
+create table PRODUCTS (
+    ID integer primary key generated ALWAYS as identity (start with 1, increment by 1),
+    NAME varchar(50) not null,
+    COLOR varchar(10),
+    PRICE integer not null default 0,
+    BALANCE integer not null default 0
+);
+
+create table ORDERS (
+    ID integer primary key generated ALWAYS as identity (start with 1, increment by 1),
+    DATE date not null,
+    CONTACTNAME varchar(50) not null,
+    CONTACTTEL varchar(11) not null,
+    ADDRESS varchar(50),
+    DISCOUNT integer not null default 0
+);
+
+create table SOLD_PRODUCTS (
+    ID_PRODUCTS integer references PRODUCTS(ID),
+    ID_ORDERS integer references ORDERS(ID),
+    NAME varchar(50) not null,
+    COLOR varchar(10),
+    PRICE integer not null default 0,
+    AMOUNT integer not null default 0
+);
+
+insert into PRODUCTS (name, color, price, balance)
+    values ('banana', 'yellow', 56, 496),
+    ('ananas', 'brown', 120, 196),
+    ('potatoes', 'brown', 45, 985);
+
+insert into ORDERS (DATE, CONTACTNAME, CONTACTTEL, ADDRESS)
+    values ('2020-06-12', 'Olga', '9115622345', 'Moskovskiy, 10'),
+    ('2020-06-13', 'Misha', '9211224545', 'Nalichnaya, 55'),
+    ('2020-06-14', 'Vasiliy', '9313268952', 'Veteranov, 122');
+
+insert into SOLD_PRODUCTS (ID_PRODUCTS, ID_ORDERS, NAME, COLOR, PRICE, AMOUNT)
+    values (1, 1, 'banana', 'yellow', 56, 3),
+    (2, 1, 'ananas', 'brown', 120, 2),
+    (3, 1, 'potatoes', 'brown', 45, 5),
+    (1, 2, 'banana', 'yellow', 56, 1),
+    (2, 2, 'ananas', 'brown', 120, 1),
+    (2, 3, 'ananas', 'brown', 120, 1),
+    (3, 3, 'potatoes', 'brown', 45, 10);ed to stop updating the OCJA exam.
