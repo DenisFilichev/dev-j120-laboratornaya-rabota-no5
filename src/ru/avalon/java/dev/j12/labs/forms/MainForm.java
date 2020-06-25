@@ -137,6 +137,13 @@ public class MainForm extends JFrame{
         jmTools.add(jmiProperties);
         
         jmTools.add(jmiBD);
+        jmiBD.addActionListener(e -> {
+            try {
+                new DefaultDB().createTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         
         
         
